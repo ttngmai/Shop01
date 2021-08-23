@@ -1,0 +1,8 @@
+shop01-backend/config
+shop01-backend/migrations
+shop01-backend/node_modules
+shop01-backend/seeders
+shop01-backend/.env
+
+shop01-frontend/node_modules
+shop01-frontend/yarn-error.log
