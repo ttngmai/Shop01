@@ -56,19 +56,19 @@ module.exports = async function createDummy() {
     const products1 = [...Array(10).keys()].map((i) => ({
       category_id: '1',
       name: `책상 #${i + 1}`,
-      price: '120000',
+      price: '100',
     }));
 
     const products2 = [...Array(10).keys()].map((i) => ({
       category_id: '2',
       name: `의자 #${i + 1}`,
-      price: '50000',
+      price: '100',
     }));
 
     const products3 = [...Array(10).keys()].map((i) => ({
       category_id: '3',
       name: `침대 #${i + 1}`,
-      price: '200000',
+      price: '100',
     }));
 
     const products = products1.concat(products2).concat(products3);

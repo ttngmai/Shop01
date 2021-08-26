@@ -4,6 +4,10 @@ module.exports = class OrderDetail extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
+        name: {
+          type: Sequelize.STRING(40),
+          allowNull: false,
+        },
         price: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
@@ -11,6 +15,7 @@ module.exports = class OrderDetail extends Sequelize.Model {
         count: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
+          defaultValue: 1,
         },
         status: {
           type: Sequelize.STRING(20),
@@ -32,7 +37,10 @@ module.exports = class OrderDetail extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.OrderDetail.belongsTo(db.Order, { foreignKey: 'order_id', targetKey: 'id' });
-    db.OrderDetail.belongsTo(db.Product, { foreignKey: 'product_id', targetKey: 'id' });
+    db.OrderDetail.belongsTo(db.Order, {
+      foreignKey: 'order_id',
+      targetKey: 'id',
+    });
+    // db.OrderDetail.belongsTo(db.Product, { foreignKey: 'product_id', targetKey: 'id' });
   }
 };

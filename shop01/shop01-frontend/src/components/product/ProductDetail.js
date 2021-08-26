@@ -1,8 +1,9 @@
 import React from 'react';
 import cn from 'classnames';
 import styled from 'styled-components';
-import Responsive from '../common/Responsive';
 import palette from '../../lib/styles/palette';
+import Responsive from '../common/Responsive';
+import ProductBuyButtonsContainer from '../../containers/product/ProductBuyButtonsContainer';
 import addComma from '../../lib/addComma';
 
 const ProductDetailBlock = styled(Responsive)`
@@ -140,6 +141,7 @@ const ProductDetail = ({
             <em className="num">{addComma(price)}</em>원
           </p>
         </div>
+        <ProductBuyButtonsContainer product={product} />
       </ProductInfoBlock>
     </ProductDetailBlock>
   );

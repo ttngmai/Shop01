@@ -37,10 +37,10 @@ module.exports = class Product extends Sequelize.Model {
       targetKey: 'id',
     });
     db.Product.hasMany(db.Cart, { foreignKey: 'product_id', sourceKey: 'id' });
-    db.Product.hasMany(db.OrderDetail, {
-      foreignKey: 'product_id',
-      sourceKey: 'id',
-    });
+    // db.Product.hasMany(db.OrderDetail, {
+    //   foreignKey: 'product_id',
+    //   sourceKey: 'id',
+    // });
     db.Product.hasMany(db.ProductImage, {
       foreignKey: 'product_id',
       sourceKey: 'id',

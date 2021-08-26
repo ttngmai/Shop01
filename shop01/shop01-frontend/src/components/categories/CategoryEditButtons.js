@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { VscEdit, VscTrash, VscAdd } from 'react-icons/vsc';
 import palette from '../../lib/styles/palette';
 
-const CategoryButtonsBlock = styled.div`
+const CategoryEditButtonsBlock = styled.div`
   display: flex;
   align-items: center;
   position: absolute;
@@ -85,9 +85,9 @@ const DeleteButton = styled.button`
   }
 `;
 
-const CategoryButtons = ({ onCreateButtonClick, onEditButtonClick, onDeleteButtonClick }) => {
+const CategoryEditButtons = ({ onCreateButtonClick, onEditButtonClick, onDeleteButtonClick }) => {
   return (
-    <CategoryButtonsBlock>
+    <CategoryEditButtonsBlock>
       <CreateButton type="button" onClick={onCreateButtonClick}>
         <VscAdd className="vscAdd" />
       </CreateButton>
@@ -97,8 +97,8 @@ const CategoryButtons = ({ onCreateButtonClick, onEditButtonClick, onDeleteButto
       <DeleteButton type="button" onClick={onDeleteButtonClick}>
         <VscTrash className="vscTrash" />
       </DeleteButton>
-    </CategoryButtonsBlock>
+    </CategoryEditButtonsBlock>
   );
 };
 
-export default CategoryButtons;
+export default CategoryEditButtons;

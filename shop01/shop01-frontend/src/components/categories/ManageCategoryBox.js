@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { CgChevronRight, CgFolder } from 'react-icons/cg';
 import { VscDash } from 'react-icons/vsc';
 import palette from '../../lib/styles/palette';
-import CategoryButtonsContainer, { CreateButtonContainer } from '../../containers/categories/CategoryButtonsContainer';
+import CategoryEditButtonsContainer, {
+  CreateButtonContainer,
+} from '../../containers/categories/CategoryEditButtonsContainer';
 
 const CreateButtonBlock = styled.div`
   display: flex;
@@ -21,11 +23,6 @@ const ManageCategoryBoxBlock = styled.div`
     border-radius: 4px;
     background: white;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-  }
-
-  h1 {
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
   }
 `;
 
@@ -52,14 +49,14 @@ const AccordionHeading = styled.div`
     cursor: pointer;
   }
 
-  & span {
+  span {
     width: calc(100% - 6.5rem);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  & .cgChevronRight {
+  .cgChevronRight {
     transition: all 0.35s ease;
 
     &[aria-expanded='true'] {
@@ -67,9 +64,9 @@ const AccordionHeading = styled.div`
     }
   }
 
-  & .cgChevronRight,
-  & .vscDash,
-  & .cgFolder {
+  .cgChevronRight,
+  .vscDash,
+  .cgFolder {
     width: 1rem;
     height: 1rem;
     margin-right: 0.5rem;
@@ -110,7 +107,7 @@ const AccordionItem = React.memo(({ category, children, depth }) => {
         <CgFolder className="cgFolder" />
         <span>{category.name}</span>
       </AccordionHeading>
-      <CategoryButtonsContainer category={category} />
+      <CategoryEditButtonsContainer category={category} />
       <AccordionContent aria-expanded={!isAccordionOpen}>
         {children}
       </AccordionContent>
@@ -136,7 +133,6 @@ const Accordion = React.memo(({ categories, depth = 1 }) => {
 const ManageCategoryBox = ({ categories }) => {
   return (
     <ManageCategoryBoxBlock>
-      <h1>카테고리 관리</h1>
       <CreateButtonBlock>
         <CreateButtonContainer />
       </CreateButtonBlock>

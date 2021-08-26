@@ -4,11 +4,6 @@ import Button from '../common/Button';
 import palette from '../../lib/styles/palette';
 
 const RegisterProductFormBlock = styled.div`
-  h1 {
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-  }
-
   form {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -61,7 +56,6 @@ const RegisterProductForm = ({
 }) => {
   return (
     <RegisterProductFormBlock>
-      <h1>상품 등록</h1>
       <form onSubmit={onSubmit}>
         <div className="select-category-box">{selectCategoryBox}</div>
         <label>상품명</label>

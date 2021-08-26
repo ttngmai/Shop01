@@ -38,7 +38,7 @@ app.use(morgan('dev'));
 app.use('/images', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET, { sameSite: "none" }));
 app.use(
   session({
     resave: false,

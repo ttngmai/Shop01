@@ -1,18 +1,18 @@
 import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
-import RegisterProductTemplate from '../components/product/RegisterProductTemplate';
+import WhiteBoxTemplate from '../components/common/WhiteBoxTemplate';
 import ManageCategoryBoxContainer from '../containers/categories/ManageCategoryBoxContainer';
 
 const ManageCategoryPage = () => {
   return (
     <Background>
       <HeaderContainer />
-      <RegisterProductTemplate>
+      <WhiteBoxTemplate heading="카테고리 관리">
         <ManageCategoryBoxContainer />
-      </RegisterProductTemplate>
+      </WhiteBoxTemplate>
     </Background>
-  )
+  );
 };
 
 export default ManageCategoryPage;

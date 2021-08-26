@@ -83,8 +83,8 @@ exports.list = async (req, res, next) => {
       offset: (page - 1) * 12,
     });
 
-    const productCount = await Product.count();
-    res.set('Last-Page', Math.ceil(productCount / 12)).json(products);
+    const productsCount = await Product.count(); // 조건에 따라 표시해야 되므로 findAndCountAll() 사용해 볼 것!
+    res.set('Last-Page', Math.ceil(productsCount / 12)).json(products);
   } catch (err) {
     console.log(err);
     next(err);

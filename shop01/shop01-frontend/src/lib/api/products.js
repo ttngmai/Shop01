@@ -11,7 +11,7 @@ export const listProducts = ({ category, name, page }) => {
 };
 
 export const registerProduct = (data) => {
-  client.post('api/products', data, {
+  client.post('/api/products', data, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 };

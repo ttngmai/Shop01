@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 import Button from '../../components/common/Button';
-import CategoryButtons from '../../components/categories/CategoryButtons';
+import CategoryEditButtons from '../../components/categories/CategoryEditButtons';
 import { listCategories } from '../../modules/categories';
 import {
   createCategory,
@@ -87,7 +87,7 @@ export const CreateButtonContainer = () => {
   );
 };
 
-const CategoryButtonsContainer = ({ category }) => {
+const CategoryEditButtonsContainer = ({ category }) => {
   const dispatch = useDispatch();
 
   const [askCreateModal, setAskCreateModal] = useState(false);
@@ -166,7 +166,7 @@ const CategoryButtonsContainer = ({ category }) => {
 
   return (
     <>
-      <CategoryButtons
+      <CategoryEditButtons
         onCreateButtonClick={handleCreateButtonClick}
         onEditButtonClick={handleEditButtonClick}
         onDeleteButtonClick={handleDeleteButtonClick}
@@ -208,4 +208,4 @@ const CategoryButtonsContainer = ({ category }) => {
   );
 };
 
-export default CategoryButtonsContainer;
+export default CategoryEditButtonsContainer;

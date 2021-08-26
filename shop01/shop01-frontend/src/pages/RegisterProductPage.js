@@ -1,16 +1,16 @@
 import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
-import RegisterProductTemplate from '../components/product/RegisterProductTemplate';
+import WhiteBoxTemplate from '../components/common/WhiteBoxTemplate';
 import RegisterProductFormContainer from '../containers/product/RegisterProductFormContainer';
 
 const RegisterProductPage = () => {
   return (
     <Background>
       <HeaderContainer />
-      <RegisterProductTemplate>
+      <WhiteBoxTemplate heading="상품 등록">
         <RegisterProductFormContainer />
-      </RegisterProductTemplate>
+      </WhiteBoxTemplate>
     </Background>
   );
 };
