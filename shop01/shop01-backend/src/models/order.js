@@ -13,10 +13,10 @@ module.exports = class Order extends Sequelize.Model {
           defaultValue: Sequelize.UUIDV4,
           unique: true,
         },
-        // amount: {
-        //   type: Sequelize.INTEGER.UNSIGNED,
-        //   defaultValue: 0,
-        // },
+        amount: {
+          type: Sequelize.INTEGER.UNSIGNED,
+          defaultValue: 0,
+        },
         cancel_amount: {
           type: Sequelize.INTEGER.UNSIGNED,
           defaultValue: 0,

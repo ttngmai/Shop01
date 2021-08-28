@@ -27,7 +27,7 @@ const OrderItem = ({ order, onRefundButtonClick }) => {
         <OrderDetailItemBlock key={orderDetail.id}>
           <p>상품명: {orderDetail.name}</p>
           <p>가격: {orderDetail.price}</p>
-          <p>수량: {orderDetail.count}</p>
+          <p>수량: {orderDetail.quantity}</p>
         </OrderDetailItemBlock>
       ))}
       <Button

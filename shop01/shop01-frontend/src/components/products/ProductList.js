@@ -56,7 +56,9 @@ const ProductItemBlock = styled.div`
   }
 
   .num {
+    margin-right: 0.1875rem;
     font-style: normal;
+    vertical-align: -1px;
     font-size: 1.5rem;
   }
 `;

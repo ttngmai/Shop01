@@ -1,8 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import ProductBuyButtons from '../../components/product/ProductBuyButtons';
 import client from '../../lib/api/client';
 
-const ProductBuyButtonsContainer = ({ product }) => {
+const ProductBuyButtonsContainer = () => {
+  const { product, totalAmount } = useSelector(({ product }) => ({
+    product: product.read.product,
+    totalAmount: product.read.totalAmount,
+  }));
+
   const handleBuyButtonClick = async () => {
     const { data } = await client.post('/api/orders', {
       products: [product],
@@ -19,7 +25,7 @@ const ProductBuyButtonsContainer = ({ product }) => {
         pay_method: 'card',
         merchant_uid: merchant_uid,
         name: product.name,
-        amount: product.price,
+        amount: totalAmount,
         buyer_email: 'iamport@siot.do',
         buyer_name: '구매자이름',
         buyer_tel: '010-1234-5678',

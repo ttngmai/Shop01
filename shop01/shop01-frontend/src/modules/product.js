@@ -12,6 +12,10 @@ const [REGISTER_PRODUCT, REGISTER_PRODUCT_SUCCESS, REGISTER_PRODUCT_FAILURE] =
   createRequestActionTypes('product/REGISTER_PRODUCT');
 const [READ_PRODUCT, READ_PRODUCT_SUCCESS, READ_PRODUCT_FAILURE] =
   createRequestActionTypes('product/READ_PRODUCT');
+const CHANGE_QUANTITY = 'product/CHANGE_QUANTITY';
+const DECREASE_QUANTITY = 'product/DECREASE_QUANTITY';
+const INCREASE_QUANTITY = 'product/INCREASE_QUANTITY';
+const CHANGE_TOTAL_AMOUNT = 'product/CHANGE_TOTAL_AMOUNT';
 
 export const initializeProduct = createAction(INITIALIZE_PRODUCT);
 export const changeField = createAction(
@@ -24,9 +28,25 @@ export const changeField = createAction(
 );
 export const registerProduct = createAction(
   REGISTER_PRODUCT,
-  ( formData ) => ( formData ),
+  (formData) => formData,
 );
 export const readProduct = createAction(READ_PRODUCT, (id) => id);
+export const changeQuantity = createAction(
+  CHANGE_QUANTITY,
+  (quantity) => quantity,
+);
+export const decreaseQuantity = createAction(
+  DECREASE_QUANTITY,
+  (difference) => difference,
+);
+export const increaseQuantity = createAction(
+  INCREASE_QUANTITY,
+  (difference) => difference,
+);
+export const changeTotalAmount = createAction(
+  CHANGE_TOTAL_AMOUNT,
+  (totalAmount) => totalAmount,
+);
 
 const registerProductSaga = createRequestSaga(
   REGISTER_PRODUCT,
@@ -45,6 +65,8 @@ export function* productSaga() {
 const initialState = {
   read: {
     product: null,
+    quantity: 0,
+    totalAmount: 0,
   },
   register: {
     category: '',
@@ -80,6 +102,20 @@ const product = handleActions(
       ...state,
       error,
     }),
+    [DECREASE_QUANTITY]: (state, { payload: difference }) =>
+      produce(state, (draft) => {
+        draft.read.quantity =
+          draft.read.quantity > 0 ? draft.read.quantity - difference : 0;
+      }),
+    [INCREASE_QUANTITY]: (state, { payload: difference }) =>
+      produce(state, (draft) => {
+        draft.read.quantity =
+          draft.read.quantity === '' ? 0 + difference : draft.read.quantity + 1;
+      }),
+    [CHANGE_TOTAL_AMOUNT]: (state, { payload: totalAmount }) =>
+      produce(state, (draft) => {
+        draft.read.totalAmount = totalAmount;
+      }),
   },
   initialState,
 );

@@ -5,16 +5,15 @@ import palette from '../../lib/styles/palette';
 
 const ProductBuyButtonsBlock = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
 `;
 
 const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45%;
+  width: 49%;
   height: 3.5rem;
   border: 1px solid ${palette.indigo[7]};
   border-radius: 4px;

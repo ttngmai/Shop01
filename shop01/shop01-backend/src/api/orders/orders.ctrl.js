@@ -3,13 +3,16 @@ const axios = require('axios');
 const Order = require('../../models/order');
 const OrderDetail = require('../../models/orderDetail');
 
+const IMP_KEY = '2993379252229988';
+const IMP_SECRET =
+  '4lP2EHCTHyg4jggSvv5urWitq8gze03jlSmZAYTix9mQqDIV8OqAKI3aRkK5kNpGGLGhKzzhJW79zQ5I';
+
 const getIamportToken = async () => {
   const iamportToken = await axios.post(
     'https://api.iamport.kr/users/getToken',
     {
-      imp_key: '2993379252229988',
-      imp_secret:
-        '4lP2EHCTHyg4jggSvv5urWitq8gze03jlSmZAYTix9mQqDIV8OqAKI3aRkK5kNpGGLGhKzzhJW79zQ5I',
+      imp_key: IMP_KEY,
+      imp_secret: IMP_SECRET,
     },
   );
   const accessToken = iamportToken.data.response.access_token;
@@ -45,12 +48,6 @@ exports.validate = async (req, res, next) => {
     });
 
     const dbAmount = parseInt(dbPayment.data.amount, 10);
-
-    console.log('--------------------');
-    console.log(iamportStatus);
-    console.log(iamportAmount);
-    console.log(dbAmount);
-    console.log('--------------------');
 
     if (iamportStatus === 'paid' && iamportAmount === dbAmount) {
       await Order.update(
@@ -154,7 +151,7 @@ exports.read = async (req, res, next) => {
           Sequelize.fn(
             'SUM',
             Sequelize.literal(
-              '`OrderDetails`.`price` * `OrderDetails`.`count`',
+              '`OrderDetails`.`price` * `OrderDetails`.`quantity`',
             ),
           ),
           'amount',
@@ -180,10 +177,6 @@ exports.refund = async (req, res, next) => {
 
   try {
     const product = await Order.findOne({ where: { merchant_uid } });
-
-    console.log('-----product-----');
-    console.log(product);
-    console.log('--------------------');
 
     // AccessToken 가져오기
     const accessToken = await getIamportToken();

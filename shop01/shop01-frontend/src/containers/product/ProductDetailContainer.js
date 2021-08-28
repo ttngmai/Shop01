@@ -6,11 +6,14 @@ import { initializeProduct, readProduct } from '../../modules/product';
 
 const ProductDetailContainer = ({ match }) => {
   const dispatch = useDispatch();
-  const { product, loading, error } = useSelector(({ product, loading }) => ({
-    product: product.read.product,
-    loading: loading['product/READ_PRODUCT'],
-    error: product.error,
-  }));
+  const { product, totalAmount, loading, error } = useSelector(
+    ({ product, loading }) => ({
+      product: product.read.product,
+      totalAmount: product.read.totalAmount,
+      loading: loading['product/READ_PRODUCT'],
+      error: product.error,
+    }),
+  );
 
   const { productId } = match.params;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -30,6 +33,7 @@ const ProductDetailContainer = ({ match }) => {
   return (
     <ProductDetail
       product={product}
+      totalAmount={totalAmount}
       loading={loading}
       activeImageIndex={activeImageIndex}
       error={error}
