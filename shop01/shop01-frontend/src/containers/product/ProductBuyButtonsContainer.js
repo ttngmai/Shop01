@@ -12,6 +12,7 @@ const ProductBuyButtonsContainer = () => {
   const handleBuyButtonClick = async () => {
     const { data } = await client.post('/api/orders', {
       products: [product],
+      amount: totalAmount,
     });
     const { merchant_uid } = data;
 

@@ -154,7 +154,7 @@ const ProductDetail = ({
         <figure
           className="product-image"
           style={{
-            backgroundImage: `url('http://localhost:4000/images/${activeImage}')`,
+            backgroundImage: `url('/images/${activeImage}')`,
           }}
         />
         <ProductImages>
@@ -163,7 +163,7 @@ const ProductDetail = ({
               <figure
                 className={cn({ active: index === activeImageIndex })}
                 style={{
-                  backgroundImage: `url('http://localhost:4000/images/${image.name}')`,
+                  backgroundImage: `url('/images/${image.name}')`,
                 }}
               />
             </ProductImage>

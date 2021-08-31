@@ -17,6 +17,10 @@ module.exports = class OrderDetail extends Sequelize.Model {
           allowNull: false,
           defaultValue: 1,
         },
+        image: {
+          type: Sequelize.STRING(200),
+          allowNull: false,
+        },
         status: {
           type: Sequelize.STRING(20),
           allowNull: false,

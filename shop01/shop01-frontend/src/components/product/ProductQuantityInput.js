@@ -42,30 +42,23 @@ const StyledInput = styled.input`
 `;
 
 const ProductQuantityInput = ({
-  quantity,
+  product,
   onDecreaseButtonClick,
   onIncreaseButtonClick,
   onChange,
 }) => {
   return (
     <ProductQuantityInputBlock>
-      <QuantityMinusButton
-        type="button"
-        onClick={() => onDecreaseButtonClick(1)}
-      >
+      <QuantityMinusButton type="button" onClick={onDecreaseButtonClick}>
         <VscRemove className="icon" />
       </QuantityMinusButton>
       <StyledInput
         type="text"
         autoComplete="off"
-        name="quantity"
-        value={quantity}
+        value={product.quantity}
         onChange={onChange}
       />
-      <QuantityPlusButton
-        type="button"
-        onClick={() => onIncreaseButtonClick(1)}
-      >
+      <QuantityPlusButton type="button" onClick={onIncreaseButtonClick}>
         <VscAdd className="icon" />
       </QuantityPlusButton>
     </ProductQuantityInputBlock>

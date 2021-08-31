@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductQuantityInput from '../../components/product/ProductQuantityInput';
 import {
-  changeField,
+  changeQuantity,
   decreaseQuantity,
   increaseQuantity,
   changeTotalAmount,
@@ -11,49 +11,42 @@ import {
 
 const ProductQuantityInputContainer = () => {
   const dispatch = useDispatch();
-  const { product, quantity, totalAmount } = useSelector(({ product }) => ({
+  const { product } = useSelector(({ product }) => ({
     product: product.read.product,
-    quantity: product.read.quantity,
-    totalAmount: product.read.totalAmount,
   }));
 
-  const handleDecreaseButtonClick = (difference) => {
+  const handleDecreaseButtonClick = () => {
+    const difference = 1;
     dispatch(decreaseQuantity(difference));
   };
 
-  const handleIncreaseButtonClick = (difference) => {
+  const handleIncreaseButtonClick = () => {
+    const difference = 1;
     dispatch(increaseQuantity(difference));
   };
 
   const handleChange = (e) => {
-    const { name } = e.target;
     let { value } = e.target;
 
-    value = value.replace(/[^0-9]/g,'');
+    value = value.replace(/[^0-9]/g, '');
 
     if (value !== '') {
       value = parseInt(value);
     }
 
-    dispatch(
-      changeField({
-        form: 'read',
-        key: name,
-        value: value,
-      }),
-    );
+    dispatch(changeQuantity(value));
   };
 
   useEffect(() => {
     if (product) {
-      const totalAmount = product.price * quantity;
+      const totalAmount = product.price * product.quantity;
       dispatch(changeTotalAmount(totalAmount));
     }
-  }, [product, quantity, dispatch]);
+  }, [product, dispatch]);
 
   return (
     <ProductQuantityInput
-      quantity={quantity}
+      product={product}
       onDecreaseButtonClick={handleDecreaseButtonClick}
       onIncreaseButtonClick={handleIncreaseButtonClick}
       onChange={handleChange}

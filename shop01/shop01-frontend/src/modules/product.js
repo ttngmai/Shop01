@@ -65,7 +65,6 @@ export function* productSaga() {
 const initialState = {
   read: {
     product: null,
-    quantity: 0,
     totalAmount: 0,
   },
   register: {
@@ -96,21 +95,29 @@ const product = handleActions(
     }),
     [READ_PRODUCT_SUCCESS]: (state, { payload: product }) =>
       produce(state, (draft) => {
-        draft.read.product = product;
+        draft.read.product = { ...product, quantity: 1 };
       }),
     [READ_PRODUCT_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
     }),
+    [CHANGE_QUANTITY]: (state, { payload: quantity }) =>
+      produce(state, (draft) => {
+        draft.read.product.quantity = quantity;
+      }),
     [DECREASE_QUANTITY]: (state, { payload: difference }) =>
       produce(state, (draft) => {
-        draft.read.quantity =
-          draft.read.quantity > 0 ? draft.read.quantity - difference : 0;
+        draft.read.product.quantity =
+          draft.read.product.quantity > 0
+            ? draft.read.product.quantity - difference
+            : 0;
       }),
     [INCREASE_QUANTITY]: (state, { payload: difference }) =>
       produce(state, (draft) => {
-        draft.read.quantity =
-          draft.read.quantity === '' ? 0 + difference : draft.read.quantity + 1;
+        draft.read.product.quantity =
+          draft.read.product.quantity === ''
+            ? 0 + difference
+            : draft.read.product.quantity + 1;
       }),
     [CHANGE_TOTAL_AMOUNT]: (state, { payload: totalAmount }) =>
       produce(state, (draft) => {

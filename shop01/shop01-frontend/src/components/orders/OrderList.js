@@ -16,7 +16,19 @@ const OrderItemBlock = styled.li`
 `;
 
 const OrderDetailItemBlock = styled.div`
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
   border: 1px solid ${palette.gray[5]};
+
+  figure {
+    width: 100%;
+    height: 0;
+    padding-bottom: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-color: lightgray;
+  }
 `;
 
 const OrderItem = ({ order, onRefundButtonClick }) => {
@@ -25,9 +37,18 @@ const OrderItem = ({ order, onRefundButtonClick }) => {
       <p>merchant_uid: {order.merchant_uid}</p>
       {order.OrderDetails.map((orderDetail) => (
         <OrderDetailItemBlock key={orderDetail.id}>
-          <p>상품명: {orderDetail.name}</p>
-          <p>가격: {orderDetail.price}</p>
-          <p>수량: {orderDetail.quantity}</p>
+          <figure
+            className="product-image"
+            style={{
+              backgroundImage: `url('/images/${orderDetail.image}')`,
+            }}
+          />
+          <div className="product-info">
+            <p>상품명: {orderDetail.name}</p>
+            <p>가격: {orderDetail.price}</p>
+            <p>수량: {orderDetail.quantity}</p>
+            <p>총 상품 금액: {order.amount}</p>
+          </div>
         </OrderDetailItemBlock>
       ))}
       <Button

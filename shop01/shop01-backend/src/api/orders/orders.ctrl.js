@@ -1,18 +1,17 @@
-const Sequelize = require('sequelize');
+const dotenv = require('dotenv');
+const { sequelize } = require('../../models');
 const axios = require('axios');
 const Order = require('../../models/order');
 const OrderDetail = require('../../models/orderDetail');
 
-const IMP_KEY = '2993379252229988';
-const IMP_SECRET =
-  '4lP2EHCTHyg4jggSvv5urWitq8gze03jlSmZAYTix9mQqDIV8OqAKI3aRkK5kNpGGLGhKzzhJW79zQ5I';
+dotenv.config();
 
 const getIamportToken = async () => {
   const iamportToken = await axios.post(
     'https://api.iamport.kr/users/getToken',
     {
-      imp_key: IMP_KEY,
-      imp_secret: IMP_SECRET,
+      imp_key: process.env.IMP_KEY,
+      imp_secret: process.env.IMP_SECRET,
     },
   );
   const accessToken = iamportToken.data.response.access_token;
@@ -90,20 +89,29 @@ exports.validate = async (req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
-  const { products } = req.body;
+  const { products, amount } = req.body;
 
   try {
-    const order = await Order.create();
+    const transaction = await sequelize.transaction();
+    const order = await Order.create({ amount }, { transaction });
 
-    products.forEach(async (product) => {
-      const { name, price } = product;
-      let orderDetail = await OrderDetail.create({ name, price });
+    for (product of products) {
+      const image = product.ProductImages[0].name;
+      const { name, price, quantity } = product;
+      let orderDetail = await OrderDetail.create(
+        { name, price, quantity, image },
+        { transaction },
+      );
 
-      order.addOrderDetail(orderDetail);
-    });
+      await order.addOrderDetail(orderDetail, { transaction });
+    }
+
+    await transaction.commit();
 
     res.json(order);
   } catch (err) {
+    await transaction.rollback();
+
     console.log(err);
     next(err);
   }
@@ -148,9 +156,9 @@ exports.read = async (req, res, next) => {
         'created_at',
         'user_id',
         [
-          Sequelize.fn(
+          sequelize.fn(
             'SUM',
-            Sequelize.literal(
+            sequelize.literal(
               '`OrderDetails`.`price` * `OrderDetails`.`quantity`',
             ),
           ),
