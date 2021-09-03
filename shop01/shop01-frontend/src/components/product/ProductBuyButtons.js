@@ -40,10 +40,10 @@ const AddToCartButton = styled(Button)``;
 
 const BuyButton = styled(Button)``;
 
-const ProductBuyButtons = ({ onBuyButtonClick }) => {
+const ProductBuyButtons = ({ onAddToCartButtonClick, onBuyButtonClick }) => {
   return (
     <ProductBuyButtonsBlock>
-      <AddToCartButton type="button">
+      <AddToCartButton type="button" onClick={onAddToCartButtonClick}>
         <BiCart className="icon" />
         담기
       </AddToCartButton>

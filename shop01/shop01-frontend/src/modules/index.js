@@ -6,6 +6,7 @@ import user, { userSaga } from './user';
 import products, { productsSaga } from './products';
 import product, { productSaga } from './product';
 import categories, { categoriesSaga } from './categories';
+import cart, { cartSaga } from './cart';
 import orders, { ordersSaga } from './orders';
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   products,
   product,
   categories,
+  cart,
   orders,
 });
 
@@ -25,6 +27,7 @@ export function* rootSaga() {
     productsSaga(),
     productSaga(),
     categoriesSaga(),
+    cartSaga(),
     ordersSaga(),
   ]);
 }

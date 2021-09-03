@@ -9,6 +9,10 @@ const ProductBuyButtonsContainer = () => {
     totalAmount: product.read.totalAmount,
   }));
 
+  const handleAddToCartButtonClick = async () => {
+    await client.post('/api/carts', { product });
+  };
+
   const handleBuyButtonClick = async () => {
     const { data } = await client.post('/api/orders', {
       products: [product],
@@ -52,7 +56,12 @@ const ProductBuyButtonsContainer = () => {
     );
   };
 
-  return <ProductBuyButtons onBuyButtonClick={handleBuyButtonClick} />;
+  return (
+    <ProductBuyButtons
+      onAddToCartButtonClick={handleAddToCartButtonClick}
+      onBuyButtonClick={handleBuyButtonClick}
+    />
+  );
 };
 
 export default ProductBuyButtonsContainer;

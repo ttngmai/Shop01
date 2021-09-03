@@ -14,6 +14,7 @@ const jwtMiddleware = async (req, res, next) => {
     console.log(decoded);
 
     req.user = {
+      id: decoded.id,
       email: decoded.email,
       nick: decoded.nick,
       role_id: decoded.role_id,

@@ -17,11 +17,11 @@ const Wrapper = styled(Responsive)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4rem;
+  height: 3.5rem;
 
   .logo-area {
     font-size: 1.125rem;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 2px;
     transition: all 0.3s;
   }
@@ -37,12 +37,15 @@ const Wrapper = styled(Responsive)`
 `;
 
 const Spacer = styled.div`
-  height: 4rem;
+  height: 3.5rem;
 `;
 
 const UserInfo = styled.div`
-  font-weight: 800;
   margin-right: 1rem;
+
+  .sir {
+    padding-left: 0.2rem;
+  }
 `;
 
 const Header = ({ user, onLogout }) => {
@@ -55,7 +58,7 @@ const Header = ({ user, onLogout }) => {
           </Link>
           {user ? (
             <div className="right">
-              <UserInfo>{user.nick}</UserInfo>
+              <UserInfo>{user.nick}<span className="sir">님</span></UserInfo>
               <Button onClick={onLogout}>로그아웃</Button>
             </div>
           ) : (

@@ -14,6 +14,6 @@ router.get('/', productsCtrl.list);
 
 router.get('/:id', checkPK, productsCtrl.read);
 router.patch('/:id', checkPK, productsCtrl.update);
-router.delete('/:id', checkPK, productsCtrl.remove);
+router.delete('/:id', checkPK, productsCtrl.delete);
 
 module.exports = router;

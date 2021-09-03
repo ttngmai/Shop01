@@ -4,8 +4,10 @@ module.exports = class Cart extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        count: {
+        quantity: {
           type: Sequelize.INTEGER.UNSIGNED,
+          allowNull: false,
+          defaultValue: 1,
         },
       },
       {

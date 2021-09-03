@@ -167,7 +167,7 @@ exports.update = async (req, res, next) => {
   }
 };
 
-exports.remove = async (req, res, next) => {
+exports.delete = async (req, res, next) => {
   const { id } = req.params;
 
   try {

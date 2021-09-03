@@ -19,11 +19,11 @@ const ProductItemBlock = styled.div`
 
   .product-image {
     height: 0;
-    padding-bottom: 70%;
+    padding-bottom: 75%;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    background-color: lightgray;
+    background-color: ${palette.gray[1]};
   }
 
   .product-info {
@@ -45,6 +45,7 @@ const ProductItemBlock = styled.div`
     padding-bottom: 1rem;
     font-weight: 400;
     white-space: pre-line;
+    cursor: pointer;
 
     &:hover {
       color: ${palette.indigo[7]};
@@ -56,10 +57,8 @@ const ProductItemBlock = styled.div`
   }
 
   .num {
-    margin-right: 0.1875rem;
+    margin-right: 0.1rem;
     font-style: normal;
-    vertical-align: -1px;
-    font-size: 1.5rem;
   }
 `;
 const ProductItem = ({ product }) => {

@@ -17,12 +17,12 @@ const ProductDetailBlock = styled(Responsive)`
 const ProductImagesBlock = styled.div`
   .product-image {
     height: 0;
-    padding-bottom: 70%;
+    padding-bottom: 75%;
     margin-bottom: 0.5rem;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    background-color: lightgray;
+    background-color: ${palette.gray[1]};
   }
 `;
 
@@ -39,11 +39,11 @@ const ProductImage = styled.li`
   figure {
     width: 100%;
     height: 0;
-    padding-bottom: 70%;
+    padding-bottom: 75%;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    background-color: lightgray;
+    background-color: ${palette.gray[1]};
     opacity: 0.5;
     cursor: pointer;
 
@@ -78,13 +78,14 @@ const ProductInfo = styled.div`
 
   .product-price {
     font-size: 1.25rem;
+    font-weight: 400;
   }
 
   .num {
-    margin-right: 0.25rem;
+    margin-right: 0.15rem;
+    vertical-align: -1px;
     font-style: normal;
-    vertical-align: -2px;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
   }
 `;
@@ -104,18 +105,18 @@ const TotalAmount = styled.div`
   border-top: 1px solid ${palette.gray[3]};
 
   .total-amount {
-    font-size: 1.25rem;
+    font-weight: 400;
   }
 
-  .title {
-    margin-right: 0.75rem;
+  .total-amount-label {
+    margin-right: 0.5rem;
     font-size: 1rem;
   }
 
   .num {
-    margin-right: 0.25rem;
+    margin-right: 0.2rem;
+    vertical-align: -1px;
     font-style: normal;
-    vertical-align: -2px;
     font-size: 2rem;
     font-weight: 700;
   }
@@ -178,18 +179,18 @@ const ProductDetail = ({
           <h1 className="product-name">{name}</h1>
         </ProductInfo>
         <ProductInfo>
-          <p className="product-price">
+          <strong className="product-price">
             <em className="num">{addComma(price)}</em>원
-          </p>
+          </strong>
         </ProductInfo>
         <ProductQuantity>
           <ProductQuantityInputContainer />
         </ProductQuantity>
         <TotalAmount>
-          <p className="total-amount">
-            <span className="title">총 상품 금액:</span>
+          <strong className="total-amount">
+            <span className="total-amount-label">총 상품 금액:</span>
             <em className="num">{addComma(totalAmount)}</em>원
-          </p>
+          </strong>
         </TotalAmount>
         <ButtonsBox>
           <ProductBuyButtonsContainer />

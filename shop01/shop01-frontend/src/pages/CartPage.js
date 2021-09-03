@@ -1,7 +1,18 @@
 import React from 'react';
+import Background from '../components/common/Background';
+import HeaderContainer from '../containers/common/HeaderContainer';
+import WhiteBoxTemplate from '../components/common/WhiteBoxTemplate';
+import CartContainer from '../containers/cart/CartContainer';
 
 const CartPage = () => {
-  return <div>카트</div>;
+  return (
+    <Background>
+      <HeaderContainer />
+      <WhiteBoxTemplate heading="장바구니">
+        <CartContainer />
+      </WhiteBoxTemplate>
+    </Background>
+  );
 };
 
 export default CartPage;

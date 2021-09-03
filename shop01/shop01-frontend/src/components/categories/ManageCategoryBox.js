@@ -39,14 +39,13 @@ const AccordionHeading = styled.div`
   position: relative;
   padding: 0.5rem 0;
   background-color: white;
-  font-weight: 500;
   color: black;
   transition: ease-in-out 0.2s all;
+  cursor: pointer;
 
   &:hover {
     padding-left: 0.25rem;
     background-color: ${palette.indigo[1]};
-    cursor: pointer;
   }
 
   span {
