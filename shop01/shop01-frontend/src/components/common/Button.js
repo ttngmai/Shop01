@@ -36,8 +36,32 @@ const buttonStyle = css`
     `}
 `;
 
+const borderlessButtonStyle = css`
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:not(:disabled):hover {
+    color: ${palette.indigo[7]};
+  }
+
+  &:disabled {
+    background-color: ${palette.gray[3]};
+    color: ${palette.gray[5]};
+    cursor: not-allowed;
+  }
+
+  ${(props) =>
+    props.fullWidth &&
+    css`
+      width: 100%;
+      padding: 0.75rem 0;
+      font-size: 1.125rem;
+    `}
+`;
+
 const StyledButton = styled.button`
-  ${buttonStyle}
+  ${(props) => (props.borderless ? borderlessButtonStyle : buttonStyle)}
 `;
 
 const StyledLink = styled(Link)`

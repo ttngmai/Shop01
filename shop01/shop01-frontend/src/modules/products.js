@@ -33,7 +33,7 @@ const products = handleActions(
     [LIST_PRODUCTS_SUCCESS]: (state, { payload: products, meta: res }) => ({
       ...state,
       products,
-      lastPage: parseInt(res.headers['last-page'], 10),
+      lastPage: parseInt(res.headers['products-last-page'], 10),
     }),
     [LIST_PRODUCTS_FAILURE]: (state, { payload: error }) => ({
       ...state,

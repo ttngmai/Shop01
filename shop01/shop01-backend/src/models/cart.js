@@ -9,6 +9,11 @@ module.exports = class Cart extends Sequelize.Model {
           allowNull: false,
           defaultValue: 1,
         },
+        create_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.NOW,
+        },
       },
       {
         sequelize,

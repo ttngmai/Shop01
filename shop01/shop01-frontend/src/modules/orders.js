@@ -29,7 +29,7 @@ const orders = handleActions(
     [LIST_ORDERS_SUCCESS]: (state, { payload: orders, meta: res }) => ({
       ...state,
       orders,
-      lastPage: parseInt(res.headers['last_page'], 10),
+      lastPage: parseInt(res.headers['orders-last-page'], 10),
     }),
     [LIST_ORDERS_FAILURE]: (state, { payload: error }) => ({
       ...state,

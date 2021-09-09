@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ProductBuyButtons from '../../components/product/ProductBuyButtons';
+import ProductOrderButtons from '../../components/product/ProductOrderButtons';
 import client from '../../lib/api/client';
 
-const ProductBuyButtonsContainer = () => {
+const ProductOrderButtonsContainer = () => {
   const { product, totalAmount } = useSelector(({ product }) => ({
     product: product.read.product,
     totalAmount: product.read.totalAmount,
@@ -13,9 +13,16 @@ const ProductBuyButtonsContainer = () => {
     await client.post('/api/carts', { product });
   };
 
-  const handleBuyButtonClick = async () => {
+  const handleOrderButtonClick = async () => {
     const { data } = await client.post('/api/orders', {
-      products: [product],
+      products: [
+        {
+          name: product.name,
+          price: product.price,
+          quantity: product.quantity,
+          image: product.ProductImages[0].name,
+        },
+      ],
       amount: totalAmount,
     });
     const { merchant_uid } = data;
@@ -57,11 +64,11 @@ const ProductBuyButtonsContainer = () => {
   };
 
   return (
-    <ProductBuyButtons
+    <ProductOrderButtons
       onAddToCartButtonClick={handleAddToCartButtonClick}
-      onBuyButtonClick={handleBuyButtonClick}
+      onOrderButtonClick={handleOrderButtonClick}
     />
   );
 };
 
-export default ProductBuyButtonsContainer;
+export default ProductOrderButtonsContainer;

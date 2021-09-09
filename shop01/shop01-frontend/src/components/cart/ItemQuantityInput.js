@@ -3,7 +3,7 @@ import { VscRemove, VscAdd } from 'react-icons/vsc';
 import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 
-const ProductQuantityInputBlock = styled.div`
+const ItemQuantityInputBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,28 +41,28 @@ const StyledInput = styled.input`
   font-size: 1rem;
 `;
 
-const ProductQuantityInput = ({
-  product,
+const ItemQuantityInput = ({
+  item,
   onDecreaseButtonClick,
   onIncreaseButtonClick,
   onChange,
 }) => {
   return (
-    <ProductQuantityInputBlock>
+    <ItemQuantityInputBlock>
       <QuantityMinusButton type="button" onClick={onDecreaseButtonClick}>
         <VscRemove />
       </QuantityMinusButton>
       <StyledInput
         type="text"
         autoComplete="off"
-        value={product.quantity}
+        value={item.quantity}
         onChange={onChange}
       />
       <QuantityPlusButton type="button" onClick={onIncreaseButtonClick}>
         <VscAdd />
       </QuantityPlusButton>
-    </ProductQuantityInputBlock>
+    </ItemQuantityInputBlock>
   );
 };
 
-export default ProductQuantityInput;
+export default ItemQuantityInput;

@@ -15,7 +15,6 @@ const [READ_PRODUCT, READ_PRODUCT_SUCCESS, READ_PRODUCT_FAILURE] =
 const CHANGE_QUANTITY = 'product/CHANGE_QUANTITY';
 const DECREASE_QUANTITY = 'product/DECREASE_QUANTITY';
 const INCREASE_QUANTITY = 'product/INCREASE_QUANTITY';
-const CHANGE_TOTAL_AMOUNT = 'product/CHANGE_TOTAL_AMOUNT';
 
 export const initializeProduct = createAction(INITIALIZE_PRODUCT);
 export const changeField = createAction(
@@ -42,10 +41,6 @@ export const decreaseQuantity = createAction(
 export const increaseQuantity = createAction(
   INCREASE_QUANTITY,
   (difference) => difference,
-);
-export const changeTotalAmount = createAction(
-  CHANGE_TOTAL_AMOUNT,
-  (totalAmount) => totalAmount,
 );
 
 const registerProductSaga = createRequestSaga(
@@ -81,6 +76,10 @@ const initialState = {
   error: null,
 };
 
+const getTotalAmount = (product) => {
+  return product.price * product.quantity;
+};
+
 const product = handleActions(
   {
     [INITIALIZE_PRODUCT]: () => initialState,
@@ -96,6 +95,7 @@ const product = handleActions(
     [READ_PRODUCT_SUCCESS]: (state, { payload: product }) =>
       produce(state, (draft) => {
         draft.read.product = { ...product, quantity: 1 };
+        draft.read.totalAmount = getTotalAmount(draft.read.product);
       }),
     [READ_PRODUCT_FAILURE]: (state, { payload: error }) => ({
       ...state,
@@ -104,6 +104,7 @@ const product = handleActions(
     [CHANGE_QUANTITY]: (state, { payload: quantity }) =>
       produce(state, (draft) => {
         draft.read.product.quantity = quantity;
+        draft.read.totalAmount = getTotalAmount(draft.read.product);
       }),
     [DECREASE_QUANTITY]: (state, { payload: difference }) =>
       produce(state, (draft) => {
@@ -111,6 +112,7 @@ const product = handleActions(
           draft.read.product.quantity > 0
             ? draft.read.product.quantity - difference
             : 0;
+        draft.read.totalAmount = getTotalAmount(draft.read.product);
       }),
     [INCREASE_QUANTITY]: (state, { payload: difference }) =>
       produce(state, (draft) => {
@@ -118,10 +120,7 @@ const product = handleActions(
           draft.read.product.quantity === ''
             ? 0 + difference
             : draft.read.product.quantity + 1;
-      }),
-    [CHANGE_TOTAL_AMOUNT]: (state, { payload: totalAmount }) =>
-      produce(state, (draft) => {
-        draft.read.totalAmount = totalAmount;
+        draft.read.totalAmount = getTotalAmount(draft.read.product);
       }),
   },
   initialState,

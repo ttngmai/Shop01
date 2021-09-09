@@ -14,7 +14,7 @@ const StyledButton = styled.button`
   background-color: white;
   cursor: pointer;
 
-  & svg {
+  svg {
     width: 1.5rem;
     height: 1.5rem;
     color: ${palette.gray[5]};

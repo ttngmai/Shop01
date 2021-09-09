@@ -13,7 +13,6 @@ const CheckAllBoxContainer = () => {
   const [isAllChecked, setIsAllChecked] = useState(true);
 
   const handleClick = () => {
-    console.log('전체 선택 클릭!');
     dispatch(toggleAllChecked(!isAllChecked));
   };
 
@@ -34,7 +33,7 @@ const CheckAllBoxContainer = () => {
 
   return (
     <CheckAllBox
-      itemCount={cart && cart.length}
+      itemCount={cart ? cart.length : 0}
       checkedItemCount={checkedItemCount}
       isAllChecked={isAllChecked}
       onClick={handleClick}

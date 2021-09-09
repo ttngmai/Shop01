@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderList from '../../components/orders/OrderList';
 import { listOrders } from '../../modules/orders';
-import { refund } from '../../lib/api/orders';
 
 const OrderListContainer = () => {
   const dispatch = useDispatch();
@@ -12,22 +11,11 @@ const OrderListContainer = () => {
     error: orders.error,
   }));
 
-  const handleRefundButtonClick = (merchant_uid) => {
-    refund(merchant_uid);
-  };
-
   useEffect(() => {
     dispatch(listOrders());
   }, [dispatch]);
 
-  return (
-    <OrderList
-      orders={orders}
-      loading={loading}
-      error={error}
-      onRefundButtonClick={handleRefundButtonClick}
-    />
-  );
+  return <OrderList orders={orders} loading={loading} error={error} />;
 };
 
 export default OrderListContainer;

@@ -19,14 +19,9 @@ const ItemDeleteButtonContainer = ({ item }) => {
     setAskDeleteModal(false);
   };
 
-  const handleConfirmDeleteButtonClick = async () => {
-    try {
-      dispatch(deleteItem(item.id));
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setAskDeleteModal(false);
-    }
+  const handleConfirmDeleteButtonClick = () => {
+    dispatch(deleteItem(item.id));
+    setAskDeleteModal(false);
   };
 
   return (

@@ -5,7 +5,7 @@ import qs from 'qs';
 import ProductList from '../../components/products/ProductList';
 import { listProducts } from '../../modules/products';
 
-const ProductListContainer = ({ location, match }) => {
+const ProductListContainer = ({ location }) => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(({ products, loading }) => ({
     products: products.products,
@@ -14,13 +14,12 @@ const ProductListContainer = ({ location, match }) => {
   }));
 
   useEffect(() => {
-    const { category } = match.params;
-    const { name, page } = qs.parse(location.search, {
+    const { category, name, page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
 
     dispatch(listProducts({ category, name, page }));
-  }, [dispatch, match.params, location.search]);
+  }, [dispatch, location.search]);
 
   return <ProductList products={products} loading={loading} error={error} />;
 };

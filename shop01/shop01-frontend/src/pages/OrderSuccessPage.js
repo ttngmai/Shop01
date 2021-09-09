@@ -2,17 +2,17 @@ import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
 import WhiteBoxTemplate from '../components/common/WhiteBoxTemplate';
-import ManageCategoryBoxContainer from '../containers/categories/ManageCategoryBoxContainer';
+import OrderSuccess from '../components/orders/OrderSuccess';
 
-const ManageCategoryPage = () => {
+const OrderSuccessPage = () => {
   return (
     <Background>
       <HeaderContainer />
-      <WhiteBoxTemplate heading="카테고리 관리">
-        <ManageCategoryBoxContainer />
+      <WhiteBoxTemplate heading="주문 성공">
+        <OrderSuccess />
       </WhiteBoxTemplate>
     </Background>
   );
 };
 
-export default ManageCategoryPage;
+export default OrderSuccessPage;

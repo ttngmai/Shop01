@@ -1,20 +1,46 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { IoAlertCircleSharp } from 'react-icons/io5';
 import palette from '../../lib/styles/palette';
 import CheckAllBoxContainer from '../../containers/cart/CheckAllBoxContainer';
+import ItemsDeleteButtonContainer from '../../containers/cart/ItemsDeleteButtonContainer';
 import CheckBoxContainer from '../../containers/cart/CheckBoxContainer';
 import ItemDeleteButtonContainer from '../../containers/cart/ItemDeleteButtonContainer';
+import ItemQuantityInputContainer from '../../containers/cart/ItemQuantityInputContainer';
+import ItemsOrderButtonContainer from '../../containers/cart/ItemsOrderButtonContainer';
 import addComma from '../../lib/addComma';
 
-const CartBoxBlock = styled.div``;
+const EmptyCart = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+  border-top: 1px solid ${palette.gray[5]};
+  border-bottom: 1px solid ${palette.gray[5]};
+
+  svg {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+  }
+`;
+
+const CartBlock = styled.div``;
+
+const ButtonsBox = styled.div`
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 1rem;
+`;
 
 const CartItemListBlock = styled.div``;
 
 const CartItemBlock = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 8% 15% 35% 17% 17% 8%;
+  grid-template-columns: 3rem 1.5fr 3fr 2fr 2fr 3rem;
   padding: 1rem 0;
   border-bottom: 1px solid ${palette.gray[5]};
 
@@ -34,8 +60,7 @@ const CartItemBlock = styled.div`
 `;
 
 const ItemInfo = styled.div`
-  display: flex;
-  padding-left: 1rem;
+  padding: 0 1rem;
 
   .product-name {
     display: block;
@@ -46,13 +71,45 @@ const ItemInfo = styled.div`
     &:hover {
       color: ${palette.indigo[7]};
     }
+
+    a {
+      display: block;
+    }
   }
 `;
 
-const Amount = styled.div`
+const ItemQuantity = styled.div``;
+
+const ItemAmount = styled.div`
+  justify-self: end;
+
   .num {
     margin-right: 0.1rem;
     font-style: normal;
+  }
+`;
+
+const TotalAmount = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+
+  .total-amount {
+    font-weight: 400;
+  }
+
+  .total-amount-label {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .num {
+    margin-right: 0.2rem;
+    vertical-align: -1px;
+    font-style: normal;
+    font-size: 2rem;
+    font-weight: 700;
   }
 `;
 
@@ -60,23 +117,27 @@ const CartItem = ({ item }) => {
   return (
     <CartItemBlock>
       <CheckBoxContainer item={item} />
-      <figure
-        className="product-image"
-        style={{
-          backgroundImage: `url('/images/${item.image}')`,
-        }}
-      />
+      <Link to={`/product-detail/${item.id}`}>
+        <figure
+          className="product-image"
+          style={{
+            backgroundImage: `url('/images/${item.image}')`,
+          }}
+        />
+      </Link>
       <ItemInfo>
         <strong className="product-name">
-          <Link to={`product-detail/${item.id}`}>{item.name}</Link>
+          <Link to={`/product-detail/${item.id}`}>{item.name}</Link>
         </strong>
       </ItemInfo>
-      <div>수량 조절 Input</div>
-      <Amount>
+      <ItemQuantity>
+        <ItemQuantityInputContainer item={item} />
+      </ItemQuantity>
+      <ItemAmount>
         <strong className="amount">
           <em className="num">{addComma(item.price * item.quantity)}</em>원
         </strong>
-      </Amount>
+      </ItemAmount>
       <ItemDeleteButtonContainer item={item} />
     </CartItemBlock>
   );
@@ -90,12 +151,41 @@ const CartItemList = ({ cart }) => {
   );
 };
 
-const Cart = ({ cart }) => {
+const Cart = ({ cart, totalAmount, loading, error }) => {
+  if (error) {
+    return <CartBlock>에러가 발생했습니다.</CartBlock>;
+  }
+
+  if (loading || !cart) {
+    return null;
+  }
+
+  if (cart.length === 0) {
+    return (
+      <CartBlock>
+        <EmptyCart>
+          <IoAlertCircleSharp />
+          <p>장바구니에 담긴 상품이 없습니다.</p>
+        </EmptyCart>
+      </CartBlock>
+    );
+  }
+
   return (
-    <CartBoxBlock>
-      <CheckAllBoxContainer />
+    <CartBlock>
+      <ButtonsBox>
+        <CheckAllBoxContainer />
+        <ItemsDeleteButtonContainer />
+      </ButtonsBox>
       <CartItemList cart={cart} />
-    </CartBoxBlock>
+      <TotalAmount>
+        <strong className="total-amount">
+          <span className="total-amount-label">총 상품 금액:</span>
+          <em className="num">{addComma(totalAmount)}</em>원
+        </strong>
+      </TotalAmount>
+      <ItemsOrderButtonContainer />
+    </CartBlock>
   );
 };
 

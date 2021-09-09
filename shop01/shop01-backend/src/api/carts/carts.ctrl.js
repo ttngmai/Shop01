@@ -1,4 +1,5 @@
 const { sequelize } = require('../../models');
+const { Op } = require('sequelize');
 const Product = require('../../models/product');
 const ProductImage = require('../../models/productImage');
 const Cart = require('../../models/cart');
@@ -51,6 +52,7 @@ exports.read = async (req, res, next) => {
           ],
         },
       ],
+      order: [[sequelize.literal('`Cart`.`create_at`'), 'DESC']],
     });
 
     res.json(cart);
@@ -74,6 +76,29 @@ exports.delete = async (req, res, next) => {
   try {
     await Cart.destroy({
       where: { user_id: user.id, product_id: id },
+    });
+
+    res.status(204).end();
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.deleteItems = async (req, res, next) => {
+  const user = req.user;
+  const ids = req.body;
+
+  if (!user) {
+    // 로그인하지 않았을 경우
+    console.log('로그인 안됨');
+    res.end();
+    return;
+  }
+
+  try {
+    await Cart.destroy({
+      where: { user_id: user.id, product_id: { [Op.in]: ids } },
     });
 
     res.status(204).end();

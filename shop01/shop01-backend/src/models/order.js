@@ -21,11 +21,6 @@ module.exports = class Order extends Sequelize.Model {
           type: Sequelize.INTEGER.UNSIGNED,
           defaultValue: 0,
         },
-        status: {
-          type: Sequelize.STRING(20),
-          allowNull: false,
-          defaultValue: 'PROCESSING',
-        },
         created_at: {
           type: Sequelize.DATE,
           allowNull: false,
@@ -46,6 +41,10 @@ module.exports = class Order extends Sequelize.Model {
   }
 
   static associate(db) {
+    db.Order.belongsTo(db.OrderStatus, {
+      foreignKey: 'order_status_id',
+      targetKey: 'id',
+    });
     db.Order.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
     db.Order.hasMany(db.OrderDetail, {
       foreignKey: 'order_id',

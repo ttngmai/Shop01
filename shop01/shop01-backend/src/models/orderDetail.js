@@ -21,11 +21,6 @@ module.exports = class OrderDetail extends Sequelize.Model {
           type: Sequelize.STRING(200),
           allowNull: false,
         },
-        status: {
-          type: Sequelize.STRING(20),
-          allowNull: false,
-          defaultValue: 'PROCESSING',
-        },
       },
       {
         sequelize,
@@ -45,6 +40,5 @@ module.exports = class OrderDetail extends Sequelize.Model {
       foreignKey: 'order_id',
       targetKey: 'id',
     });
-    // db.OrderDetail.belongsTo(db.Product, { foreignKey: 'product_id', targetKey: 'id' });
   }
 };

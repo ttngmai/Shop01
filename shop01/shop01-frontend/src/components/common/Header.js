@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { VscTriangleDown } from 'react-icons/vsc';
 import Responsive from './Responsive';
 import Button from './Button';
 import palette from '../../lib/styles/palette';
@@ -40,13 +41,104 @@ const Spacer = styled.div`
   height: 3.5rem;
 `;
 
-const UserInfo = styled.div`
+const UserMenuBlock = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
   margin-right: 1rem;
 
   .sir {
-    padding-left: 0.2rem;
+    padding: 0 0.2rem;
   }
 `;
+
+const UserMenuHeading = styled.div`
+  cursor: pointer;
+`;
+const UserMenuContent = styled.nav`
+  position: absolute;
+  top: 1.95rem;
+  right: 0;
+  width: 100px;
+  border-radius: 4px;
+  background-color: white;
+  border: 1px solid ${palette.gray[5]};
+
+  &[aria-expanded='true'] {
+    display: none;
+  }
+
+  li {
+    padding: 0.25rem 0.5rem;
+
+    a,
+    span {
+      cursor: pointer;
+    }
+
+    a:hover,
+    span:hover {
+      color: ${palette.indigo[7]};
+    }
+  }
+`;
+
+const UserMenu = ({ nick, onLogout }) => {
+  const dropdownRef = useRef(null);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  useEffect(() => {
+    const pageClickEvent = (e) => {
+      if (
+        dropdownRef.current !== null &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+        setIsDropdownOpen(!isDropdownOpen);
+      }
+    };
+
+    if (isDropdownOpen) {
+      window.addEventListener('click', pageClickEvent);
+    }
+
+    return () => {
+      window.removeEventListener('click', pageClickEvent);
+    };
+  }, [isDropdownOpen]);
+
+  return (
+    <UserMenuBlock>
+      <UserMenuHeading onClick={handleToggle}>
+        {nick}
+        <span className="sir">님</span>
+        <VscTriangleDown />
+      </UserMenuHeading>
+      <UserMenuContent ref={dropdownRef} aria-expanded={!isDropdownOpen}>
+        <ul>
+          <li>
+            <Link to="/user/mypage">마이페이지</Link>
+          </li>
+          <li>
+            <Link to="/user/cart">장바구니</Link>
+          </li>
+          <li>
+            <Link to="/user/order">주문 목록</Link>
+          </li>
+          <li>
+            <Button onClick={onLogout} borderless>
+              로그아웃
+            </Button>
+          </li>
+        </ul>
+      </UserMenuContent>
+    </UserMenuBlock>
+  );
+};
 
 const Header = ({ user, onLogout }) => {
   return (
@@ -58,12 +150,11 @@ const Header = ({ user, onLogout }) => {
           </Link>
           {user ? (
             <div className="right">
-              <UserInfo>{user.nick}<span className="sir">님</span></UserInfo>
-              <Button onClick={onLogout}>로그아웃</Button>
+              <UserMenu nick={user.nick} onLogout={onLogout} />
             </div>
           ) : (
             <div className="right">
-              <Button to="/login">로그인</Button>
+              <Button to="/user/login">로그인</Button>
             </div>
           )}
         </Wrapper>

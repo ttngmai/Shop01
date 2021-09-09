@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  IoIosCheckmarkCircleOutline,
-  IoIosCheckmarkCircle,
-} from 'react-icons/io';
+  IoCheckmarkCircleOutline,
+  IoCheckmarkCircleSharp,
+} from 'react-icons/io5';
 import palette from '../../lib/styles/palette';
 
 const CheckBoxLabel = styled.label`
@@ -13,7 +13,7 @@ const CheckBoxLabel = styled.label`
   width: 2rem;
   height: 2rem;
 
-  & svg {
+  svg {
     position: relative;
     width: 2rem;
     height: 2rem;
@@ -25,7 +25,7 @@ const CheckBoxLabel = styled.label`
     }
   }
 
-  & input {
+  input {
     position: absolute;
     z-index: -1;
     left: 9.6px;
@@ -37,9 +37,9 @@ const CheckBox = ({ item, onClick }) => {
   return (
     <CheckBoxLabel htmlFor={item.id}>
       {item.checked ? (
-        <IoIosCheckmarkCircle className="checked" />
+        <IoCheckmarkCircleSharp className="checked" />
       ) : (
-        <IoIosCheckmarkCircleOutline />
+        <IoCheckmarkCircleOutline />
       )}
       <input
         type="checkbox"

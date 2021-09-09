@@ -50,6 +50,10 @@ const ProductItemBlock = styled.div`
     &:hover {
       color: ${palette.indigo[7]};
     }
+
+    a {
+      display: block;
+    }
   }
 
   .product-price {
@@ -68,16 +72,18 @@ const ProductItem = ({ product }) => {
 
   return (
     <ProductItemBlock>
-      <figure
-        className="product-image"
-        style={{
-          backgroundImage: `url('http://localhost:4000/images/${image}')`,
-        }}
-      />
+      <Link to={`/product-detail/${id}`}>
+        <figure
+          className="product-image"
+          style={{
+            backgroundImage: `url('/images/${image}')`,
+          }}
+        />
+      </Link>
       <div className="product-info">
         <p className="product-category">{category}</p>
         <strong className="product-name">
-          <Link to={`product-detail/${id}`}>{name}</Link>
+          <Link to={`/product-detail/${id}`}>{name}</Link>
         </strong>
         <strong className="product-price">
           <em className="num">{addComma(price)}</em>원

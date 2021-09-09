@@ -1,15 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { BiCart, BiDollarCircle } from 'react-icons/bi';
 import palette from '../../lib/styles/palette';
 
-const ProductBuyButtonsBlock = styled.div`
+const ProductOrderButtonsBlock = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const Button = styled.button`
+const buttonStyle = css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,30 +29,37 @@ const Button = styled.button`
     box-shadow: 0px 2px 8px #4c72ff;
   }
 
-  & .icon {
+  svg {
     width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.5rem;
   }
 `;
 
-const AddToCartButton = styled(Button)``;
+const AddToCartButton = styled.button`
+  ${buttonStyle}
+`;
 
-const BuyButton = styled(Button)``;
+const OrderButton = styled.button`
+  ${buttonStyle}
+`;
 
-const ProductBuyButtons = ({ onAddToCartButtonClick, onBuyButtonClick }) => {
+const ProductOrderButtons = ({
+  onAddToCartButtonClick,
+  onOrderButtonClick,
+}) => {
   return (
-    <ProductBuyButtonsBlock>
+    <ProductOrderButtonsBlock>
       <AddToCartButton type="button" onClick={onAddToCartButtonClick}>
-        <BiCart className="icon" />
+        <BiCart />
         담기
       </AddToCartButton>
-      <BuyButton type="button" onClick={onBuyButtonClick}>
-        <BiDollarCircle className="icon" />
-        구매
-      </BuyButton>
-    </ProductBuyButtonsBlock>
+      <OrderButton type="button" onClick={onOrderButtonClick}>
+        <BiDollarCircle />
+        주문
+      </OrderButton>
+    </ProductOrderButtonsBlock>
   );
 };
 
-export default ProductBuyButtons;
+export default ProductOrderButtons;

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Role extends Sequelize.Model {
+module.exports = class OrderStatus extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -14,8 +14,8 @@ module.exports = class Role extends Sequelize.Model {
         sequelize,
         timestamps: false,
         underscored: true,
-        modelName: 'Role',
-        tableName: 'roles',
+        modelName: 'OrderStatus',
+        tableName: 'order_statuses',
         paranoid: false,
         charset: 'utf8',
         collate: 'utf8_general_ci',
@@ -24,6 +24,9 @@ module.exports = class Role extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Role.hasMany(db.User, { foreignkey: 'role_id', sourceKey: 'id' });
+    db.OrderStatus.hasMany(db.Order, {
+      foreignkey: 'order_status_id',
+      sourceKey: 'id',
+    });
   }
 };

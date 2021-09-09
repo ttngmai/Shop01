@@ -6,6 +6,14 @@ const OrderDetail = require('../../models/orderDetail');
 
 dotenv.config();
 
+const orderStatusMap = {
+  PROCESSING: 1,
+  PAID: 2,
+  PAYMENT_FAILED: 3,
+  REFUNDED: 4,
+  REFUND_FAILED: 5,
+};
+
 const getIamportToken = async () => {
   const iamportToken = await axios.post(
     'https://api.iamport.kr/users/getToken',
@@ -32,27 +40,43 @@ exports.validate = async (req, res, next) => {
     const accessToken = await getIamportToken();
 
     // 아임포트 결제 정보 조회 API 호출
-    const iamportPayment = await axios({
+    const iamportPaymentData = await axios({
       url: `https://api.iamport.kr/payments/${imp_uid}`,
       method: 'GET',
       headers: { Authorization: accessToken },
     });
 
-    const iamportAmount = iamportPayment.data.response.amount;
-    const iamportStatus = iamportPayment.data.response.status;
+    const iamportAmount = iamportPaymentData.data.response.amount;
+    const iamportStatus = iamportPaymentData.data.response.status;
 
-    const dbPayment = await axios({
-      url: `http://localhost:4000/api/orders/${merchant_uid}`,
-      method: 'GET',
+    const dbPaymentData = await Order.findOne({
+      where: { merchant_uid },
+      attributes: [
+        [
+          sequelize.fn(
+            'SUM',
+            sequelize.literal(
+              '`OrderDetails`.`price` * `OrderDetails`.`quantity`',
+            ),
+          ),
+          'amount',
+        ],
+      ],
+      include: [
+        {
+          model: OrderDetail,
+          attributes: [],
+        },
+      ],
     });
 
-    const dbAmount = parseInt(dbPayment.data.amount, 10);
+    const dbAmount = parseInt(dbPaymentData.dataValues.amount, 10);
 
     if (iamportStatus === 'paid' && iamportAmount === dbAmount) {
       await Order.update(
         {
           imp_uid,
-          status: 'PAID',
+          order_status_id: orderStatusMap.PAID,
         },
         {
           where: { merchant_uid },
@@ -63,7 +87,7 @@ exports.validate = async (req, res, next) => {
       await Order.update(
         {
           imp_uid,
-          status: 'PAID',
+          order_status_id: orderStatusMap.PAID,
         },
         {
           where: { merchant_uid },
@@ -74,7 +98,7 @@ exports.validate = async (req, res, next) => {
       await Order.update(
         {
           imp_uid,
-          status: 'FAILED',
+          order_status_id: orderStatusMap.PAYMENT_FAILED,
         },
         {
           where: { merchant_uid },
@@ -89,15 +113,18 @@ exports.validate = async (req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
+  const user = req.user;
   const { products, amount } = req.body;
 
   try {
     const transaction = await sequelize.transaction();
-    const order = await Order.create({ amount }, { transaction });
+    const order = await Order.create(
+      { amount, user_id: user.id, order_status_id: orderStatusMap.PROCESSING },
+      { transaction },
+    );
 
     for (product of products) {
-      const image = product.ProductImages[0].name;
-      const { name, price, quantity } = product;
+      const { name, price, quantity, image } = product;
       let orderDetail = await OrderDetail.create(
         { name, price, quantity, image },
         { transaction },
@@ -118,6 +145,7 @@ exports.create = async (req, res, next) => {
 };
 
 exports.list = async (req, res, next) => {
+  const user = req.user;
   const page = parseInt(req.query.page || '1', 10);
 
   if (page < 1) {
@@ -127,13 +155,17 @@ exports.list = async (req, res, next) => {
 
   try {
     const orders = await Order.findAll({
+      where: { user_id: user.id },
       include: [{ model: OrderDetail }],
       order: [['id', 'DESC']],
       limit: 10,
       offset: (page - 1) * 10,
     });
 
-    const ordersCount = await Order.count(); // 나중에 조건이 붙는다면 findAndCountAll() 사용해 볼 것!
+    const { count: ordersCount } = await Order.findAndCountAll({
+      where: { user_id: user.id },
+    });
+
     res.set('Orders-Last-Page', Math.ceil(ordersCount / 10)).json(orders);
   } catch (err) {
     console.log(err);
@@ -141,83 +173,51 @@ exports.list = async (req, res, next) => {
   }
 };
 
-exports.read = async (req, res, next) => {
-  const { merchant_uid } = req.params;
-
-  try {
-    const order = await Order.findOne({
-      where: { merchant_uid },
-      attributes: [
-        'id',
-        'imp_uid',
-        'merchant_uid',
-        'cancel_amount',
-        'status',
-        'created_at',
-        'user_id',
-        [
-          sequelize.fn(
-            'SUM',
-            sequelize.literal(
-              '`OrderDetails`.`price` * `OrderDetails`.`quantity`',
-            ),
-          ),
-          'amount',
-        ],
-      ],
-      include: [
-        {
-          model: OrderDetail,
-          attributes: [],
-        },
-      ],
-    });
-
-    res.json(order);
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
-};
-
 exports.refund = async (req, res, next) => {
-  const { merchant_uid } = req.params;
+  const { merchant_uid, reason, cancel_request_amount } = req.body;
 
   try {
-    const product = await Order.findOne({ where: { merchant_uid } });
+    const paymentData = await Order.findOne({ where: { merchant_uid } });
+    const { imp_uid, amount, cancel_amount } = paymentData.dataValues;
+    const cancelableAmount = amount - cancel_amount;
+
+    if (cancelableAmount <= 0) {
+      return res.status(400).json({ message: '이미 전액 환불된 주문입니다.' });
+    }
 
     // AccessToken 가져오기
     const accessToken = await getIamportToken();
 
     // 아임포트 환불 API 호출
-    const refundRet = await axios({
+    const getCancelData = await axios({
       url: 'https://api.iamport.kr/payments/cancel',
       method: 'POST',
       headers: { Authorization: accessToken },
       data: {
-        imp_uid: product.dataValues.imp_uid,
-        // reason,
-        checksum: product.dataValues.price,
+        imp_uid,
+        reason,
+        amount: cancel_request_amount,
+        checksum: cancelableAmount,
       },
     });
 
-    const isSuccess = !!refundRet.data.response;
+    const { response } = getCancelData.data;
+    const isSuccess = !!response;
 
     if (isSuccess) {
-      // 환불 완료
       await Order.update(
         {
-          status: 'REFUNDED',
+          order_status_id: orderStatusMap.REFUNDED,
+          cancel_amount: response.cancel_amount,
         },
         {
           where: { merchant_uid },
         },
       );
     } else {
-      // 환불 실패
       await Order.update(
         {
-          status: 'REFUND_FAILED',
+          order_status_id: orderStatusMap.REFUND_FAILED,
         },
         {
           where: { merchant_uid },

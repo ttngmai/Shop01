@@ -73,7 +73,7 @@ const RegisterProductForm = ({
           value={form.price}
         />
         <div className="upload-box">{uploadBox}</div>
-        <Button type="submit" className="register-button" ullWidth>
+        <Button type="submit" className="register-button">
           등록
         </Button>
       </form>

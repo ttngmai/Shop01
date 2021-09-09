@@ -1,26 +1,23 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import ProductQuantityInput from '../../components/product/ProductQuantityInput';
+import { useDispatch } from 'react-redux';
+import ItemQuantityInput from '../../components/cart/ItemQuantityInput';
 import {
   changeQuantity,
   decreaseQuantity,
   increaseQuantity,
-} from '../../modules/product';
+} from '../../modules/cart';
 
-const ProductQuantityInputContainer = () => {
+const ItemQuantityInputContainer = ({ item }) => {
   const dispatch = useDispatch();
-  const { product } = useSelector(({ product }) => ({
-    product: product.read.product,
-  }));
 
   const handleDecreaseButtonClick = () => {
     const difference = 1;
-    dispatch(decreaseQuantity(difference));
+    dispatch(decreaseQuantity({ id: item.id, difference }));
   };
 
   const handleIncreaseButtonClick = () => {
     const difference = 1;
-    dispatch(increaseQuantity(difference));
+    dispatch(increaseQuantity({ id: item.id, difference }));
   };
 
   const handleChange = (e) => {
@@ -32,14 +29,14 @@ const ProductQuantityInputContainer = () => {
       value = parseInt(value);
     }
 
-    if (value !== product.quantity) {
-      dispatch(changeQuantity(value));
+    if (value !== item.quantity) {
+      dispatch(changeQuantity({ id: item.id, quantity: value }));
     }
   };
 
   return (
-    <ProductQuantityInput
-      product={product}
+    <ItemQuantityInput
+      item={item}
       onDecreaseButtonClick={handleDecreaseButtonClick}
       onIncreaseButtonClick={handleIncreaseButtonClick}
       onChange={handleChange}
@@ -47,4 +44,4 @@ const ProductQuantityInputContainer = () => {
   );
 };
 
-export default ProductQuantityInputContainer;
+export default ItemQuantityInputContainer;

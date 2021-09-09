@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 import Responsive from '../common/Responsive';
 import ProductQuantityInputContainer from '../../containers/product/ProductQuantityInputContainer';
-import ProductBuyButtonsContainer from '../../containers/product/ProductBuyButtonsContainer';
+import ProductOrderButtonsContainer from '../../containers/product/ProductOrderButtonsContainer';
 import addComma from '../../lib/addComma';
 
 const ProductDetailBlock = styled(Responsive)`
@@ -145,8 +145,8 @@ const ProductDetail = ({
   }
 
   const images = product.ProductImages;
-  const { name: activeImage } = product.ProductImages[activeImageIndex];
-  const { name: category } = product.ProductCategory;
+  const activeImage = product.ProductImages[activeImageIndex].name;
+  const category = product.ProductCategory.name;
   const { name, price } = product;
 
   return (
@@ -193,7 +193,7 @@ const ProductDetail = ({
           </strong>
         </TotalAmount>
         <ButtonsBox>
-          <ProductBuyButtonsContainer />
+          <ProductOrderButtonsContainer />
         </ButtonsBox>
       </ProductInfoBlock>
     </ProductDetailBlock>
