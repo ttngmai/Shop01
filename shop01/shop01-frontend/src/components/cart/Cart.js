@@ -8,17 +8,21 @@ import ItemsDeleteButtonContainer from '../../containers/cart/ItemsDeleteButtonC
 import CheckBoxContainer from '../../containers/cart/CheckBoxContainer';
 import ItemDeleteButtonContainer from '../../containers/cart/ItemDeleteButtonContainer';
 import ItemQuantityInputContainer from '../../containers/cart/ItemQuantityInputContainer';
+import ItemQuantitySaveButtonContainer from '../../containers/cart/ItemQuantitySaveButtonContainer';
 import ItemsOrderButtonContainer from '../../containers/cart/ItemsOrderButtonContainer';
 import addComma from '../../lib/addComma';
+
+const CartBlock = styled.div``;
 
 const EmptyCart = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
-  border-top: 1px solid ${palette.gray[5]};
-  border-bottom: 1px solid ${palette.gray[5]};
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid ${palette.gray[3]};
+  border-bottom: 1px solid ${palette.gray[3]};
 
   svg {
     width: 3rem;
@@ -26,8 +30,6 @@ const EmptyCart = styled.div`
     margin-bottom: 1rem;
   }
 `;
-
-const CartBlock = styled.div``;
 
 const ButtonsBox = styled.div`
   display: inline-flex;
@@ -42,19 +44,26 @@ const CartItemBlock = styled.div`
   align-items: center;
   grid-template-columns: 3rem 1.5fr 3fr 2fr 2fr 3rem;
   padding: 1rem 0;
-  border-bottom: 1px solid ${palette.gray[5]};
+  border-bottom: 1px solid ${palette.gray[3]};
 
   &:first-child {
-    border-top: 1px solid ${palette.gray[5]};
+    border-top: 1px solid ${palette.gray[3]};
   }
+`;
 
-  figure {
+const ProductImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%;
+
+  & > img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 0;
-    padding-bottom: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    height: 100%;
+    object-fit: cover;
     background-color: ${palette.gray[1]};
   }
 `;
@@ -78,7 +87,12 @@ const ItemInfo = styled.div`
   }
 `;
 
-const ItemQuantity = styled.div``;
+const ItemQuantity = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ItemAmount = styled.div`
   justify-self: end;
@@ -118,12 +132,9 @@ const CartItem = ({ item }) => {
     <CartItemBlock>
       <CheckBoxContainer item={item} />
       <Link to={`/product-detail/${item.id}`}>
-        <figure
-          className="product-image"
-          style={{
-            backgroundImage: `url('/images/${item.image}')`,
-          }}
-        />
+        <ProductImageBox>
+          <img src={`/images/${item.image}`} alt={item.name} />
+        </ProductImageBox>
       </Link>
       <ItemInfo>
         <strong className="product-name">
@@ -132,6 +143,7 @@ const CartItem = ({ item }) => {
       </ItemInfo>
       <ItemQuantity>
         <ItemQuantityInputContainer item={item} />
+        <ItemQuantitySaveButtonContainer item={item} />
       </ItemQuantity>
       <ItemAmount>
         <strong className="amount">

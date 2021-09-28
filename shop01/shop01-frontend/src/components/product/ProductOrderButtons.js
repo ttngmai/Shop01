@@ -13,7 +13,7 @@ const buttonStyle = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 49%;
+  width: 100%;
   height: 3.5rem;
   border: 1px solid ${palette.indigo[7]};
   border-radius: 4px;
@@ -38,6 +38,7 @@ const buttonStyle = css`
 
 const AddToCartButton = styled.button`
   ${buttonStyle}
+  margin-right: 0.5rem;
 `;
 
 const OrderButton = styled.button`

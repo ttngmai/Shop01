@@ -33,10 +33,9 @@ const AccordionItemBlock = styled.div`
   width: 100%;
 `;
 
-const AccordionHeading = styled.div`
+const AccordionItemHeading = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
   padding: 0.5rem 0;
   background-color: white;
   color: black;
@@ -49,7 +48,7 @@ const AccordionHeading = styled.div`
   }
 
   span {
-    width: calc(100% - 6.5rem);
+    flex-grow: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -63,16 +62,14 @@ const AccordionHeading = styled.div`
     }
   }
 
-  .cgChevronRight,
-  .vscDash,
-  .cgFolder {
-    width: 1rem;
-    height: 1rem;
+  & > svg {
+    flex-basis: 1rem;
+    flex-shrink: 0;
     margin-right: 0.5rem;
   }
 `;
 
-const AccordionContent = styled.div`
+const AccordionItemContent = styled.div`
   background-color: #f0f5f9;
   overflow: hidden;
 
@@ -82,7 +79,7 @@ const AccordionContent = styled.div`
   }
 `;
 
-const AccordionItem = React.memo(({ category, children, depth }) => {
+const AccordionItem = React.memo(({ category, children }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
   const handleToggle = () => {
@@ -91,38 +88,37 @@ const AccordionItem = React.memo(({ category, children, depth }) => {
 
   return (
     <AccordionItemBlock>
-      <AccordionHeading
+      <AccordionItemHeading
         onClick={handleToggle}
-        style={{ paddingLeft: `${(depth - 1) * 0.5}rem` }}
+        style={{ paddingLeft: `${category.depth * 0.5}rem` }}
       >
         {category.children ? (
           <CgChevronRight
             className="cgChevronRight"
+            size="1rem"
             aria-expanded={isAccordionOpen}
           />
         ) : (
-          <VscDash className="vscDash" />
+          <VscDash size="1rem" />
         )}
-        <CgFolder className="cgFolder" />
+        <CgFolder size="1rem" />
         <span>{category.name}</span>
-      </AccordionHeading>
-      <CategoryEditButtonsContainer category={category} />
-      <AccordionContent aria-expanded={!isAccordionOpen}>
+        <CategoryEditButtonsContainer category={category} />
+      </AccordionItemHeading>
+      <AccordionItemContent aria-expanded={!isAccordionOpen}>
         {children}
-      </AccordionContent>
+      </AccordionItemContent>
     </AccordionItemBlock>
   );
 });
 
-const Accordion = React.memo(({ categories, depth = 1 }) => {
+const Accordion = React.memo(({ categories }) => {
   return (
     <AccordionBlock>
       {categories &&
         categories.map((category) => (
-          <AccordionItem key={category.id} category={category} depth={depth}>
-            {category.children && (
-              <Accordion categories={category.children} depth={depth + 1} />
-            )}
+          <AccordionItem key={category.id} category={category}>
+            {category.children && <Accordion categories={category.children} />}
           </AccordionItem>
         ))}
     </AccordionBlock>

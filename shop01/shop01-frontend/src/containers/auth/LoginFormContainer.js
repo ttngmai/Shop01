@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import AuthForm from '../../components/auth/AuthForm';
+import LoginForm from '../../components/auth/LoginForm';
 import { initializeForm, changeField, login } from '../../modules/auth';
 import { check } from '../../modules/user';
 
-const LoginForm = ({ history }) => {
+const LoginFormContainer = ({ history }) => {
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
     form: auth.login,
@@ -32,7 +32,7 @@ const LoginForm = ({ history }) => {
     e.preventDefault();
 
     const { email, password } = form;
-    
+
     dispatch(login({ email, password }));
   };
 
@@ -59,8 +59,7 @@ const LoginForm = ({ history }) => {
   }, [history, user]);
 
   return (
-    <AuthForm
-      type="login"
+    <LoginForm
       form={form}
       error={error}
       onChange={handleChange}
@@ -69,4 +68,4 @@ const LoginForm = ({ history }) => {
   );
 };
 
-export default withRouter(LoginForm);
+export default withRouter(LoginFormContainer);

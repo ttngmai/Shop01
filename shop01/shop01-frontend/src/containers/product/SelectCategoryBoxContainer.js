@@ -6,33 +6,36 @@ import { changeField } from '../../modules/product';
 
 const SelectCategoryBoxContainer = () => {
   const dispatch = useDispatch();
-  const { categories, loading, error, selectedCategory } = useSelector(
-    ({ categories, loading, product }) => ({
+  const { categories, loading, error } = useSelector(
+    ({ categories, loading }) => ({
       categories: categories.categories,
       loading: loading['categories/LIST_CATEGORIES'],
       error: categories.error,
-      selectedCategory: product.register.category,
     }),
   );
 
-  const [categoryList, setCategoryList] = useState([]);
-  const [input, setInput] = useState('');
-
-  const handleChange = useCallback((e) => {
-    setInput(e.target.value);
-  }, []);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const handleClick = useCallback(
-    (id) => {
-      dispatch(
-        changeField({
-          form: 'register',
-          key: 'category',
-          value: id,
-        }),
-      );
+    (category) => {
+      if (category.depth + 1 > selectedCategories.length) {
+        setSelectedCategories(selectedCategories.concat(category)); // 선택
+      } else {
+        const selectedCategoryIndex = selectedCategories
+          .map((selectedCategory) => selectedCategory.id)
+          .indexOf(category.id);
+        if (selectedCategoryIndex !== -1) {
+          setSelectedCategories(
+            selectedCategories.slice(0, selectedCategoryIndex), // 기존 선택 취소
+          );
+        } else {
+          setSelectedCategories(
+            selectedCategories.slice(0, category.depth).concat(category), // 기존 선택 변경
+          );
+        }
+      }
     },
-    [dispatch],
+    [selectedCategories],
   );
 
   useEffect(() => {
@@ -40,30 +43,27 @@ const SelectCategoryBoxContainer = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (categories) {
-      setCategoryList(categories);
-    }
-  }, [categories, setCategoryList]);
+    const selectedCategoryId =
+      selectedCategories.length > 0
+        ? selectedCategories[selectedCategories.length - 1].id
+        : null;
 
-  useEffect(() => {
-    if (categories) {
-      setCategoryList(
-        categories.filter((category) =>
-          category.name.toLowerCase().includes(input),
-        ),
-      );
-    }
-  }, [categories, input, setCategoryList]);
+    dispatch(
+      changeField({
+        form: 'register',
+        key: 'category',
+        value: selectedCategoryId,
+      }),
+    );
+  }, [selectedCategories, dispatch]);
 
   return (
     <SelectCategoryBox
-      input={input}
-      categories={categoryList}
+      categories={categories}
+      selectedCategories={selectedCategories}
       loading={loading}
-      selectedCategory={selectedCategory}
       error={error}
       onClick={handleClick}
-      onChange={handleChange}
     />
   );
 };

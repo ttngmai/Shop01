@@ -63,7 +63,7 @@ const initialState = {
     totalAmount: 0,
   },
   register: {
-    category: '',
+    category: null,
     name: '',
     price: '',
     images: [

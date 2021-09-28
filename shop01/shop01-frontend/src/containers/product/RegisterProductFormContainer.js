@@ -6,8 +6,6 @@ import {
   registerProduct,
 } from '../../modules/product';
 import RegisterProductForm from '../../components/product/RegisterProductForm';
-import SelectCategoryBoxContainer from './SelectCategoryBoxContainer';
-import UploadBoxContainer from './UploadBoxContainer';
 
 const RegisterProductFormContainer = () => {
   const dispatch = useDispatch();
@@ -57,8 +55,6 @@ const RegisterProductFormContainer = () => {
       error={error}
       onChange={handleChange}
       onSubmit={handleSubmit}
-      selectCategoryBox={<SelectCategoryBoxContainer />}
-      uploadBox={<UploadBoxContainer />}
     />
   );
 };

@@ -8,9 +8,7 @@ import * as ordersAPI from '../lib/api/orders';
 const [LIST_ORDERS, LIST_ORDERS_SUCCESS, LIST_ORDERS_FAILURE] =
   createRequestActionTypes('orders/LIST_ORDERS');
 
-export const listOrders = createAction(
-  LIST_ORDERS,
-);
+export const listOrders = createAction(LIST_ORDERS);
 
 const listOrdersSaga = createRequestSaga(LIST_ORDERS, ordersAPI.listOrders);
 
@@ -21,7 +19,7 @@ export function* ordersSaga() {
 const initialState = {
   orders: null,
   error: null,
-  lastPage: 1,
+  totalPage: 1,
 };
 
 const orders = handleActions(
@@ -29,7 +27,7 @@ const orders = handleActions(
     [LIST_ORDERS_SUCCESS]: (state, { payload: orders, meta: res }) => ({
       ...state,
       orders,
-      lastPage: parseInt(res.headers['orders-last-page'], 10),
+      totalPage: parseInt(res.headers['orders-total-page'], 10),
     }),
     [LIST_ORDERS_FAILURE]: (state, { payload: error }) => ({
       ...state,

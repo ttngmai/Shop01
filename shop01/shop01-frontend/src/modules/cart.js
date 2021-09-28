@@ -82,12 +82,12 @@ const cart = handleActions(
     }),
     [TOGGLE_ALL_CHECKED]: (state, { payload: checked }) =>
       produce(state, (draft) => {
-        draft.cart = state.cart.map((item) => ({ ...item, checked }));
+        draft.cart = draft.cart.map((item) => ({ ...item, checked }));
         draft.totalAmount = getTotalAmount(draft.cart);
       }),
     [TOGGLE_CHECKED]: (state, { payload: id }) =>
       produce(state, (draft) => {
-        draft.cart = state.cart.map((item) =>
+        draft.cart = draft.cart.map((item) =>
           item.id === id ? { ...item, checked: !item.checked } : item,
         );
         draft.totalAmount = getTotalAmount(draft.cart);
@@ -131,12 +131,12 @@ const cart = handleActions(
       }),
     [DELETE_ITEMS]: (state, payload) =>
       produce(state, (draft) => {
-        draft.cart = state.cart.filter((item) => item.checked === false);
+        draft.cart = draft.cart.filter((item) => item.checked === false);
         draft.totalAmount = getTotalAmount(draft.cart);
       }),
     [DELETE_ITEM]: (state, { payload: id }) =>
       produce(state, (draft) => {
-        draft.cart = state.cart.filter((item) => item.id !== id);
+        draft.cart = draft.cart.filter((item) => item.id !== id);
         draft.totalAmount = getTotalAmount(draft.cart);
       }),
   },

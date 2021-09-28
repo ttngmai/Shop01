@@ -35,40 +35,40 @@ module.exports = async function createDummy() {
 
     const childCategory1 = await ProductCategory.create({
       name: '원목 책상',
-      depth: '2',
+      depth: 1,
     });
     const childCategory2 = await ProductCategory.create({
       name: '원목 의자',
-      depth: '2',
+      depth: 1,
     });
     const childCategory3 = await ProductCategory.create({
       name: '돌 침대',
-      depth: '2',
+      depth: 1,
     });
 
     const childCategory1_1 = await ProductCategory.create({
       name: '멀쩡한 원목 책상',
-      depth: '3',
+      depth: 2,
     });
     const childCategory1_2 = await ProductCategory.create({
       name: '썩은 원목 책상',
-      depth: '3',
+      depth: 2,
     });
     const childCategory2_1 = await ProductCategory.create({
       name: '멀쩡한 원목 의자',
-      depth: '3',
+      depth: 2,
     });
     const childCategory2_2 = await ProductCategory.create({
       name: '썩은 원목 의자',
-      depth: '3',
+      depth: 2,
     });
     const childCategory3_1 = await ProductCategory.create({
       name: '멀쩡한 돌 침대',
-      depth: '3',
+      depth: 2,
     });
     const childCategory3_2 = await ProductCategory.create({
       name: '박살난 돌 침대',
-      depth: '3',
+      depth: 2,
     });
 
     await category1.addSubCategory(childCategory1);
@@ -83,28 +83,28 @@ module.exports = async function createDummy() {
     await childCategory3.addSubCategory(childCategory3_2);
 
     // 상품 생성
-    const products1 = [...Array(10).keys()].map((i) => ({
-      category_id: '1',
+    const desks = [...Array(10).keys()].map((i) => ({
+      category_id: 1,
       name: `책상 #${i + 1}`,
-      price: '100',
+      price: 100,
     }));
-    const products2 = [...Array(10).keys()].map((i) => ({
-      category_id: '2',
+    const chair = [...Array(10).keys()].map((i) => ({
+      category_id: 2,
       name: `의자 #${i + 1}`,
-      price: '100',
+      price: 100,
     }));
-    const products3 = [...Array(10).keys()].map((i) => ({
-      category_id: '3',
+    const beds = [...Array(10).keys()].map((i) => ({
+      category_id: 3,
       name: `침대 #${i + 1}`,
-      price: '100',
+      price: 100,
     }));
 
-    const products = products1.concat(products2).concat(products3);
+    const products = desks.concat(chair).concat(beds);
 
     for (let i = 0; i < products.length; i++) {
       let image = await ProductImage.create({
         name: 'logo.png',
-        order: '1',
+        order: 1,
       });
 
       let product = await Product.create(products[i]);
@@ -112,12 +112,11 @@ module.exports = async function createDummy() {
     }
 
     // 주문 상태 생성
-    await OrderStatus.create({name: 'PROCESSING'});
-    await OrderStatus.create({name: 'PAID'});
-    await OrderStatus.create({name: 'PAYMENT_FAILED'});
-    await OrderStatus.create({name: 'REFUNDED'});
-    await OrderStatus.create({name: 'REFUND_FAILED'});
-
+    await OrderStatus.create({ name: 'PROCESSING' });
+    await OrderStatus.create({ name: 'PAID' });
+    await OrderStatus.create({ name: 'PAYMENT_FAILED' });
+    await OrderStatus.create({ name: 'REFUNDED' });
+    await OrderStatus.create({ name: 'REFUND_FAILED' });
   } catch (err) {
     console.log(err);
   }

@@ -11,7 +11,10 @@ module.exports = class ProductCategory extends Sequelize.Model {
         depth: {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
-          defaultValue: 1,
+          defaultValue: 0,
+          validate: {
+            max: 2,
+          },
         },
       },
       {

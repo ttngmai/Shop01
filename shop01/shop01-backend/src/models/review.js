@@ -1,11 +1,15 @@
 const Sequelize = require('sequelize');
 
-module.exports = class Image extends Sequelize.Model {
+module.exports = class Review extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
+        star_rating: {
+          type: Sequelize.INTEGER.UNSIGNED,
+          allowNull: false,
+        },
         text: {
-          type: Sequelize.STRING(300),
+          type: Sequelize.STRING(1000),
           allowNull: false,
         },
         created_at: {
@@ -18,8 +22,8 @@ module.exports = class Image extends Sequelize.Model {
         sequelize,
         timestamps: false,
         underscored: true,
-        modelName: 'Comment',
-        tableName: 'comments',
+        modelName: 'Review',
+        tableName: 'reviews',
         paranoid: false,
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
@@ -28,18 +32,14 @@ module.exports = class Image extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Comment.belongsTo(db.Product, {
+    db.Review.belongsTo(db.Product, {
       foreignKey: 'product_id',
       targetKey: 'id',
     });
-    db.Comment.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
-    db.Comment.hasMany(db.CommentImage, {
-      foreignKey: 'comment_id',
+    db.Review.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
+    db.Review.hasMany(db.ReviewImage, {
+      foreignKey: 'review_id',
       sourceKey: 'id',
-    });
-    db.Comment.belongsTo(db.Comment, {
-      foreignKey: 'parent_comment',
-      as: 'ParentComment',
     });
   }
 };

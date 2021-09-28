@@ -8,6 +8,8 @@ import product, { productSaga } from './product';
 import categories, { categoriesSaga } from './categories';
 import cart, { cartSaga } from './cart';
 import orders, { ordersSaga } from './orders';
+import reviews, { reviewsSaga } from './reviews';
+import review, { reviewSaga } from './review';
 
 const rootReducer = combineReducers({
   loading,
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
   categories,
   cart,
   orders,
+  reviews,
+  review,
 });
 
 export function* rootSaga() {
@@ -29,6 +33,8 @@ export function* rootSaga() {
     categoriesSaga(),
     cartSaga(),
     ordersSaga(),
+    reviewsSaga(),
+    reviewSaga(),
   ]);
 }
 

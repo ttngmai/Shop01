@@ -17,6 +17,7 @@ const ProductOrderButtonsContainer = () => {
     const { data } = await client.post('/api/orders', {
       products: [
         {
+          id: product.id,
           name: product.name,
           price: product.price,
           quantity: product.quantity,

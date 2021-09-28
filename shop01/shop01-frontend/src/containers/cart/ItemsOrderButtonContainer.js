@@ -26,7 +26,7 @@ const ItemsOrderButtonContainer = ({ history }) => {
       const ids = items.map((item) => item.id);
       const name =
         items.length > 1
-          ? `${items[0].name} 외 ${items.length - 1}종`
+          ? `${items[0].name} 외 ${items.length - 1}건`
           : `${items[0].name}`;
 
       const { IMP } = window;

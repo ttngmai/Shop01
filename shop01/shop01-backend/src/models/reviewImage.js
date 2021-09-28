@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class CommentImage extends Sequelize.Model {
+module.exports = class ReviewImage extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -13,8 +13,8 @@ module.exports = class CommentImage extends Sequelize.Model {
         sequelize,
         timestamps: false,
         underscored: true,
-        modelName: 'CommentImage',
-        tableName: 'comment_images',
+        modelName: 'ReviewImage',
+        tableName: 'review_images',
         paranoid: false,
         charset: 'utf8',
         collate: 'utf8_general_ci',
@@ -23,8 +23,8 @@ module.exports = class CommentImage extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.CommentImage.belongsTo(db.Comment, {
-      foreignKey: 'comment_id',
+    db.ReviewImage.belongsTo(db.Review, {
+      foreignKey: 'review_id',
       targetKey: 'id',
     });
   }

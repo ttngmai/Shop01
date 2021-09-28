@@ -167,6 +167,7 @@ const CategoryEditButtonsContainer = ({ category }) => {
   return (
     <>
       <CategoryEditButtons
+        depth={category.depth}
         onCreateButtonClick={handleCreateButtonClick}
         onEditButtonClick={handleEditButtonClick}
         onDeleteButtonClick={handleDeleteButtonClick}

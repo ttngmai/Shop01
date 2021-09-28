@@ -6,14 +6,7 @@ import palette from '../../lib/styles/palette';
 const CategoryEditButtonsBlock = styled.div`
   display: flex;
   align-items: center;
-  position: absolute;
-  top: 0.425rem;
-  right: 0;
-
-  & svg {
-    width: 1rem;
-    height: 1rem;
-  }
+  margin-left: auto;
 `;
 
 const buttonStyle = css`
@@ -66,20 +59,23 @@ const DeleteButton = styled.button`
 `;
 
 const CategoryEditButtons = ({
+  depth,
   onCreateButtonClick,
   onEditButtonClick,
   onDeleteButtonClick,
 }) => {
   return (
     <CategoryEditButtonsBlock>
-      <CreateButton type="button" onClick={onCreateButtonClick}>
-        <VscAdd />
-      </CreateButton>
+      {depth < 2 ? (
+        <CreateButton type="button" onClick={onCreateButtonClick}>
+          <VscAdd size="1rem" />
+        </CreateButton>
+      ) : null}
       <EditButton type="button" onClick={onEditButtonClick}>
-        <VscEdit />
+        <VscEdit size="1rem" />
       </EditButton>
       <DeleteButton type="button" onClick={onDeleteButtonClick}>
-        <VscTrash />
+        <VscTrash size="1rem" />
       </DeleteButton>
     </CategoryEditButtonsBlock>
   );

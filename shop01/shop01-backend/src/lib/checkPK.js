@@ -5,7 +5,7 @@ const checkPK = (req, res, next) => {
   const result = schema.validate(req.params.id);
 
   if (result.error) {
-    res.status(400).send(result.error);
+    res.status(400).send(result.error); // Bad Request
     return;
   }
 

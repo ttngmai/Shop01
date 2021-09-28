@@ -1,6 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { IoStar } from 'react-icons/io5';
 import palette from '../../lib/styles/palette';
 import Responsive from '../common/Responsive';
 import ProductQuantityInputContainer from '../../containers/product/ProductQuantityInputContainer';
@@ -12,37 +13,49 @@ const ProductDetailBlock = styled(Responsive)`
   grid-template-columns: repeat(2, 1fr);
   column-gap: 2rem;
   margin-top: 3rem;
+  margin-bottom: 3rem;
 `;
 
-const ProductImagesBlock = styled.div`
-  .product-image {
-    height: 0;
-    padding-bottom: 75%;
-    margin-bottom: 0.5rem;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+const ProductImagesBox = styled.div``;
+
+const ProductImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%;
+  margin-bottom: 0.5rem;
+
+  & > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     background-color: ${palette.gray[1]};
   }
 `;
 
-const ProductImages = styled.ul`
+const ProductImageList = styled.ul`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const ProductImage = styled.li`
+const ProductImageItemBox = styled.li`
+  position: relative;
   width: 24%;
+  height: 0;
+  padding-bottom: 18%;
   margin: 0 0.5%;
 
-  figure {
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 0;
-    padding-bottom: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    height: 100%;
+    object-fit: cover;
     background-color: ${palette.gray[1]};
     opacity: 0.5;
     cursor: pointer;
@@ -54,22 +67,13 @@ const ProductImage = styled.li`
   }
 `;
 
-const ProductInfoBlock = styled.div`
+const ProductInfoBox = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
 const ProductInfo = styled.div`
   padding-bottom: 1.5rem;
-
-  .product-category {
-    display: inline-block;
-    padding: 0.2em;
-    border-radius: 0.5em;
-    background-color: black;
-    font-size: 0.75rem;
-    color: white;
-  }
 
   .product-name {
     font-size: 1.5rem;
@@ -88,6 +92,60 @@ const ProductInfo = styled.div`
     font-size: 1.5rem;
     font-weight: 700;
   }
+`;
+
+const CategoryInfo = styled.div`
+  display: flex;
+  padding-bottom: 0.5rem;
+
+  span {
+    font-size: 0.75rem;
+    color: ${palette.gray[5]};
+  }
+`;
+
+const StarRatingInfo = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.5rem;
+
+  .star_rating_average {
+    padding-right: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .reviews_total_count {
+    font-size: 0.75rem;
+    color: ${palette.gray[5]};
+  }
+`;
+
+const StarRatingBox = styled.div`
+  position: relative;
+  width: 5rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+`;
+
+const EmptyStarsIconBox = styled.div`
+  position: absolute;
+  width: 5rem;
+  color: ${palette.gray[5]};
+  overflow: hidden;
+`;
+
+const FillStarsIconBox = styled.div`
+  position: absolute;
+  width: 0;
+  color: ${palette.indigo[7]};
+  overflow: hidden;
+  white-space: nowrap;
+
+  ${(props) =>
+    props.starRatingAverage &&
+    css`
+      width: ${(props.starRatingAverage / 5) * 100}%;
+    `}
 `;
 
 const ProductQuantity = styled.div`
@@ -147,34 +205,53 @@ const ProductDetail = ({
   const images = product.ProductImages;
   const activeImage = product.ProductImages[activeImageIndex].name;
   const category = product.ProductCategory.name;
-  const { name, price } = product;
+  const { name, price, reviews_total_count, star_rating_average } = product;
 
   return (
     <ProductDetailBlock>
-      <ProductImagesBlock>
-        <figure
-          className="product-image"
-          style={{
-            backgroundImage: `url('/images/${activeImage}')`,
-          }}
-        />
-        <ProductImages>
+      <ProductImagesBox>
+        <ProductImageBox>
+          <img src={`/images/${activeImage}`} alt="" />
+        </ProductImageBox>
+        <ProductImageList>
           {images.map((image, index) => (
-            <ProductImage key={image.id} onMouseOver={() => onMouseOver(index)}>
-              <figure
+            <ProductImageItemBox
+              key={image.id}
+              onMouseOver={() => onMouseOver(index)}
+            >
+              <img
                 className={cn({ active: index === activeImageIndex })}
-                style={{
-                  backgroundImage: `url('/images/${image.name}')`,
-                }}
+                src={`/images/${image.name}`}
+                alt=""
               />
-            </ProductImage>
+            </ProductImageItemBox>
           ))}
-        </ProductImages>
-      </ProductImagesBlock>
-      <ProductInfoBlock>
-        <ProductInfo>
-          <p className="product-category">{category}</p>
-        </ProductInfo>
+        </ProductImageList>
+      </ProductImagesBox>
+      <ProductInfoBox>
+        <CategoryInfo>
+          <span>{category}</span>
+        </CategoryInfo>
+        {reviews_total_count > 0 ? (
+          <StarRatingInfo>
+            <StarRatingBox>
+              <EmptyStarsIconBox>
+                {[...Array(5)].map((item, index) => (
+                  <IoStar key={`empty-star-icon-${index}`} size="1rem" />
+                ))}
+              </EmptyStarsIconBox>
+              <FillStarsIconBox starRatingAverage={star_rating_average}>
+                {[...Array(5)].map((item, index) => (
+                  <IoStar key={`fill-star-icon-${index}`} size="1rem" />
+                ))}
+              </FillStarsIconBox>
+            </StarRatingBox>
+            <span className="star_rating_average">{star_rating_average}</span>
+            <span className="reviews_total_count">
+              ({reviews_total_count} 리뷰)
+            </span>
+          </StarRatingInfo>
+        ) : null}
         <ProductInfo>
           <h1 className="product-name">{name}</h1>
         </ProductInfo>
@@ -195,7 +272,7 @@ const ProductDetail = ({
         <ButtonsBox>
           <ProductOrderButtonsContainer />
         </ButtonsBox>
-      </ProductInfoBlock>
+      </ProductInfoBox>
     </ProductDetailBlock>
   );
 };

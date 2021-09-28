@@ -119,14 +119,14 @@ exports.create = async (req, res, next) => {
   try {
     const transaction = await sequelize.transaction();
     const order = await Order.create(
-      { amount, user_id: user.id, order_status_id: orderStatusMap.PROCESSING },
+      { amount, order_status_id: orderStatusMap.PROCESSING, user_id: user.id },
       { transaction },
     );
 
     for (product of products) {
-      const { name, price, quantity, image } = product;
+      const { id, name, price, quantity, image } = product;
       let orderDetail = await OrderDetail.create(
-        { name, price, quantity, image },
+        { product_id: id, name, price, quantity, image },
         { transaction },
       );
 
@@ -154,19 +154,22 @@ exports.list = async (req, res, next) => {
   }
 
   try {
+    const ordersPerPage = 10;
     const orders = await Order.findAll({
       where: { user_id: user.id },
       include: [{ model: OrderDetail }],
       order: [['id', 'DESC']],
-      limit: 10,
-      offset: (page - 1) * 10,
+      limit: ordersPerPage,
+      offset: (page - 1) * ordersPerPage,
     });
 
     const { count: ordersCount } = await Order.findAndCountAll({
       where: { user_id: user.id },
     });
 
-    res.set('Orders-Last-Page', Math.ceil(ordersCount / 10)).json(orders);
+    res
+      .set('Orders-Total-Page', Math.ceil(ordersCount / ordersPerPage))
+      .json(orders);
   } catch (err) {
     console.log(err);
     next(err);

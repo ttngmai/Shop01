@@ -8,13 +8,35 @@ exports.create = async (req, res, next) => {
   const user = req.user;
   const { product } = req.body;
 
-  const item = await Cart.create({
-    user_id: user.id,
-    product_id: product.id,
-    quantity: product.quantity,
-  });
+  try {
+    const exists = await Cart.findOne({
+      where: { product_id: product.id },
+    });
 
-  res.json(item);
+    if (exists) {
+      const item = await Cart.update(
+        {
+          quantity: exists.dataValues.quantity + product.quantity,
+        },
+        {
+          where: { id: exists.dataValues.id },
+        },
+      );
+
+      res.json(item);
+    } else {
+      const item = await Cart.create({
+        user_id: user.id,
+        product_id: product.id,
+        quantity: product.quantity,
+      });
+
+      res.json(item);
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 };
 
 exports.read = async (req, res, next) => {
@@ -36,7 +58,7 @@ exports.read = async (req, res, next) => {
         [sequelize.literal('`Product`.`price`'), 'price'],
         'quantity',
         [sequelize.literal('`Product->ProductImages`.`name`'), 'image'],
-        [sequelize.literal('`Product`.`create_at`'), 'create_at'],
+        [sequelize.literal('`Product`.`created_at`'), 'created_at'],
         [sequelize.literal('`Product`.`category_id`'), 'category_id'],
       ],
       include: [
@@ -52,10 +74,39 @@ exports.read = async (req, res, next) => {
           ],
         },
       ],
-      order: [[sequelize.literal('`Cart`.`create_at`'), 'DESC']],
+      order: [[sequelize.literal('`Cart`.`created_at`'), 'DESC']],
     });
 
     res.json(cart);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.update = async (req, res, next) => {
+  const user = req.user;
+  const { id } = req.params;
+  const { quantity } = req.body;
+
+  if (!user) {
+    // 로그인하지 않았을 경우
+    console.log('로그인 안됨');
+    res.end();
+    return;
+  }
+
+  try {
+    const item = await Cart.update(
+      {
+        quantity: quantity,
+      },
+      {
+        where: { user_id: user.id, product_id: id },
+      },
+    );
+
+    res.json(item);
   } catch (err) {
     console.log(err);
     next(err);

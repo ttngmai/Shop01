@@ -1,8 +1,22 @@
 const { Op } = require('sequelize');
+const Joi = require('joi');
 const ProductCategory = require('../../models/productCategory');
 const convertToTrees = require('../../lib/convertToTrees');
 
 exports.create = async (req, res, next) => {
+  const schema = Joi.object()
+    .keys({
+      name: Joi.string().max(20).required(),
+    })
+    .unknown(true);
+  const result = schema.validate(req.body);
+
+  if (result.error) {
+    console.log(result.error);
+    res.status(400).end(); // Bad Request
+    return;
+  }
+
   const { id, name } = req.body;
 
   try {
@@ -19,10 +33,7 @@ exports.create = async (req, res, next) => {
 
       res.json(subCategory);
     } else {
-      const category = await ProductCategory.create({
-        name,
-        depth: 1,
-      });
+      const category = await ProductCategory.create({ name });
 
       res.json(category);
     }
@@ -59,17 +70,28 @@ exports.list = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
+  const schema = Joi.object().keys({
+    params: Joi.object().keys({
+      id: Joi.string().required(),
+    }),
+    body: Joi.object().keys({
+      name: Joi.string().max(20).required(),
+    }),
+  });
+  const result = schema.validate({ params: req.params, body: req.body });
+
+  if (result.error) {
+    res.status(400).end(); // Bad Request
+    return;
+  }
+
   const { id } = req.params;
   const { name } = req.body;
 
   try {
     const UpdatedCategoryCount = await ProductCategory.update(
-      {
-        name,
-      },
-      {
-        where: { id },
-      },
+      { name },
+      { where: { id } },
     );
 
     if (UpdatedCategoryCount[0] < 1) {

@@ -1,18 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { CgAdd } from 'react-icons/cg';
+import { VscAdd } from 'react-icons/vsc';
 import palette from '../../lib/styles/palette';
 
-const ImagesBlock = styled.ul`
+const UploadBoxBlock = styled.ul`
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
   background-color: ${palette.gray[0]};
 `;
 
 const Item = styled.li`
-  width: 200px;
-  height: 200px;
+  position: relative;
+  width: 25%;
+  height: 0;
+  padding-bottom: ${(props) => (props.isDragging ? 0 : `18.75%`)};
   border: 2px dashed ${palette.gray[6]};
   margin: 2px;
   background: white;
@@ -22,9 +26,22 @@ const InputLabel = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  input {
+    display: none;
+  }
 `;
 
 const UploadBox = ({ images, onChange, onChangeFile }) => {
@@ -32,48 +49,31 @@ const UploadBox = ({ images, onChange, onChangeFile }) => {
     <DragDropContext onDragEnd={onChange}>
       <Droppable droppableId="images" direction="horizontal">
         {(provided) => (
-          <ImagesBlock
-            className="images"
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
+          <UploadBoxBlock ref={provided.innerRef} {...provided.droppableProps}>
             {images &&
               images.map(({ id, imageBase64 }, index) => (
                 <Draggable key={id} draggableId={id} index={index}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <Item
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
                     >
                       <InputLabel>
                         {imageBase64 ? (
-                          <img
-                            src={imageBase64}
-                            alt="uploaded"
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain',
-                            }}
-                          />
+                          <img src={imageBase64} alt="uploaded" />
                         ) : (
-                          <CgAdd style={{ fontSize: '3rem' }} />
+                          <VscAdd size="2rem" color={palette.gray[6]} />
                         )}
-                        <input
-                          key={id}
-                          type="file"
-                          name={id}
-                          onChange={onChangeFile}
-                          style={{ display: 'none' }}
-                        />
+                        <input type="file" name={id} onChange={onChangeFile} />
                       </InputLabel>
                     </Item>
                   )}
                 </Draggable>
               ))}
             {provided.placeholder}
-          </ImagesBlock>
+          </UploadBoxBlock>
         )}
       </Droppable>
     </DragDropContext>

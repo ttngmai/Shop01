@@ -7,7 +7,7 @@ const StyledButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 49%;
+  width: 50%;
   height: 3.5rem;
   border: 1px solid ${palette.indigo[7]};
   border-radius: 4px;

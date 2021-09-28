@@ -1,6 +1,15 @@
 import React from 'react';
 import qs from 'qs';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import cn from 'classnames';
+import {
+  BiChevronsLeft,
+  BiChevronLeft,
+  BiChevronRight,
+  BiChevronsRight,
+} from 'react-icons/bi';
+import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
 
 const PaginationBlock = styled.div`
@@ -12,35 +21,124 @@ const PaginationBlock = styled.div`
   padding-bottom: 3rem;
   margin: 0 auto;
 `;
-const PageNumber = styled.div``;
+
+const StyledButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+`;
+
+const StyledButtonWithMarginRight = styled(StyledButton)`
+  margin-right: 0.25rem;
+`;
+
+const StyledButtonWithMarginLeft = styled(StyledButton)`
+  margin-left: 0.25rem;
+`;
+
+const PageNumbers = styled.div`
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin-right: 0.25rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.current {
+      background-color: ${palette.indigo[7]};
+      color: white;
+    }
+
+    &:not(.current):hover {
+      background-color: ${palette.indigo[1]};
+    }
+  }
+`;
 
 const buildLink = ({ category, name, page }) => {
   const query = qs.stringify({ category, name, page });
   return `/product-list?${query}`;
 };
 
-const Pagination = ({ category, name, page, lastPage }) => {
+const Pagination = ({ category, name, page, totalPage }) => {
+  const pageButtonsCount = 5;
+
+  let first = Math.floor((page - 1) / pageButtonsCount) * pageButtonsCount + 1;
+  let last = first + pageButtonsCount - 1;
+  if (last > totalPage) {
+    last = totalPage;
+  }
+
+  const pageNumbers = [];
+  for (let i = first; i <= last; i++) {
+    pageNumbers.push(i);
+  }
+
+  if (totalPage === 0) {
+    return null;
+  }
+
   return (
     <PaginationBlock>
-      <Button
+      <StyledButtonWithMarginRight
+        disabled={page === 1}
+        to={page === 1 ? undefined : buildLink({ category, name, page: 1 })}
+      >
+        <BiChevronsLeft />
+      </StyledButtonWithMarginRight>
+      <StyledButton
         disabled={page === 1}
         to={
           page === 1 ? undefined : buildLink({ category, name, page: page - 1 })
         }
       >
-        이전
-      </Button>
-      <PageNumber>{page}</PageNumber>
-      <Button
-        disabled={page === lastPage}
+        <BiChevronLeft />
+      </StyledButton>
+      <PageNumbers>
+        {pageNumbers.map((pageNumber) => (
+          <Link
+            to={buildLink({ category, name, page: pageNumber })}
+            className={cn({ current: pageNumber === page })}
+            key={pageNumber}
+          >
+            {pageNumber}
+          </Link>
+        ))}
+      </PageNumbers>
+      <StyledButton
+        disabled={page === totalPage}
         to={
-          page === lastPage
+          page === totalPage
             ? undefined
             : buildLink({ category, name, page: page + 1 })
         }
       >
-        다음
-      </Button>
+        <BiChevronRight />
+      </StyledButton>
+      <StyledButtonWithMarginLeft
+        disabled={page === totalPage}
+        to={
+          page === totalPage
+            ? undefined
+            : buildLink({ category, name, page: totalPage })
+        }
+      >
+        <BiChevronsRight />
+      </StyledButtonWithMarginLeft>
     </PaginationBlock>
   );
 };

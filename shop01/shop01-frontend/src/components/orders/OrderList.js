@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoAlertCircleSharp } from 'react-icons/io5';
+import addComma from '../../lib/addComma';
 import palette from '../../lib/styles/palette';
 import ProductRefundButtonContainer from '../../containers/orders/ProductRefundButtonContainer';
-import addComma from '../../lib/addComma';
+import WriteReviewButtonContainer from '../../containers/orders/WriteReviewButtonContainer';
 
 const OrderListBlock = styled.div``;
 
@@ -12,9 +13,10 @@ const EmptyOrderList = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
-  border-top: 1px solid ${palette.gray[5]};
-  border-bottom: 1px solid ${palette.gray[5]};
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid ${palette.gray[3]};
+  border-bottom: 1px solid ${palette.gray[3]};
 
   svg {
     width: 3rem;
@@ -29,27 +31,33 @@ const OrderDetailListBlock = styled.li`
 
 const OrderDate = styled.div`
   padding-bottom: 0.5rem;
-  font-weight: 700;
 `;
 
 const OrderDetailItemBlock = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 20% 60% 20%;
+  grid-template-columns: 15% 70% 15%;
   padding: 1rem 0;
-  border-bottom: 1px solid ${palette.gray[5]};
+  border-bottom: 1px solid ${palette.gray[3]};
 
   &:nth-child(2) {
-    border-top: 1px solid ${palette.gray[5]};
+    border-top: 1px solid ${palette.gray[3]};
   }
+`;
 
-  figure {
+const ProductImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%;
+
+  & > img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 0;
-    padding-bottom: 75%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
+    height: 100%;
+    object-fit: cover;
     background-color: ${palette.gray[1]};
   }
 `;
@@ -90,22 +98,37 @@ const ProductInfo = styled.div`
   p {
     padding-bottom: 0.5rem;
   }
+
+  .num {
+    margin-right: 0.1rem;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .product-quantity {
+    color: ${palette.gray[5]};
+  }
 `;
 
 const OrderDetailItem = ({ orderDetail }) => {
   return (
     <OrderDetailItemBlock>
-      <figure
-        className="product-image"
-        style={{
-          backgroundImage: `url('/images/${orderDetail.image}')`,
-        }}
-      />
+      <ProductImageBox>
+        <img src={`/images/${orderDetail.image}`} alt={orderDetail.name} />
+      </ProductImageBox>
       <ProductInfo>
-        <p>상품명: {orderDetail.name}</p>
-        <p>가격: {orderDetail.price}</p>
-        <p>수량: {orderDetail.quantity}</p>
+        <p>
+          {orderDetail.name}
+          <span className="product-quantity"> ({orderDetail.quantity}개)</span>
+        </p>
+        <p>
+          <em className="num">
+            {addComma(orderDetail.price * orderDetail.quantity)}
+          </em>
+          원
+        </p>
       </ProductInfo>
+      <WriteReviewButtonContainer productId={orderDetail.product_id} />
     </OrderDetailItemBlock>
   );
 };

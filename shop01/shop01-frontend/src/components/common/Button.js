@@ -4,12 +4,11 @@ import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 
 const buttonStyle = css`
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 0.5rem;
   border: 1px solid ${palette.indigo[7]};
   border-radius: 4px;
   background-color: white;
   font-size: 1rem;
-  font-weight: bold;
   color: ${palette.indigo[7]};
   cursor: pointer;
   transition: all 0.3s;

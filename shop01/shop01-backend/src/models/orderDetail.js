@@ -4,6 +4,10 @@ module.exports = class OrderDetail extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
+        product_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },
         name: {
           type: Sequelize.STRING(40),
           allowNull: false,

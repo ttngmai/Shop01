@@ -12,7 +12,7 @@ module.exports = class Product extends Sequelize.Model {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
         },
-        create_at: {
+        created_at: {
           type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.NOW,
@@ -37,15 +37,11 @@ module.exports = class Product extends Sequelize.Model {
       targetKey: 'id',
     });
     db.Product.hasMany(db.Cart, { foreignKey: 'product_id', sourceKey: 'id' });
-    // db.Product.hasMany(db.OrderDetail, {
-    //   foreignKey: 'product_id',
-    //   sourceKey: 'id',
-    // });
     db.Product.hasMany(db.ProductImage, {
       foreignKey: 'product_id',
       sourceKey: 'id',
     });
-    db.Product.hasMany(db.Comment, {
+    db.Product.hasMany(db.Review, {
       foreignKey: 'product_id',
       sourceKey: 'id',
     });

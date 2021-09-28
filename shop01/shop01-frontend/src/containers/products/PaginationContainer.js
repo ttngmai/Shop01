@@ -5,11 +5,11 @@ import qs from 'qs';
 import Pagination from '../../components/products/Pagination';
 
 const PaginationContainer = ({ location }) => {
-  const { products, loading, lastPage } = useSelector(
+  const { products, loading, totalPage } = useSelector(
     ({ products, loading }) => ({
       products: products.products,
       loading: loading['products/LIST_PRODUCTS'],
-      lastPage: products.lastPage,
+      totalPage: products.totalPage,
     }),
   );
 
@@ -28,7 +28,7 @@ const PaginationContainer = ({ location }) => {
       category={category}
       name={name}
       page={parseInt(page, 10)}
-      lastPage={lastPage}
+      totalPage={totalPage}
     />
   );
 };

@@ -8,6 +8,10 @@ exports.register = async (req, res, next) => {
       .required(),
     password: Joi.string().required(),
     nick: Joi.string().max(15).required(),
+    phone: Joi.string()
+      .pattern(/^[0-9]*$/)
+      .max(11)
+      .required(),
   });
   const result = schema.validate(req.body);
 
@@ -16,7 +20,7 @@ exports.register = async (req, res, next) => {
     return;
   }
 
-  const { email, password, nick } = req.body;
+  const { email, password, nick, phone } = req.body;
 
   try {
     const exists = await User.findByEmail(email);
@@ -29,6 +33,7 @@ exports.register = async (req, res, next) => {
     const user = await User.build({
       email,
       nick,
+      phone,
     });
     await user.setPassword(password);
     await user.save();

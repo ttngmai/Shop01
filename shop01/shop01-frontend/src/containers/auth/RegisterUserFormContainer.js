@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import AuthForm from '../../components/auth/AuthForm';
+import RegisterUserForm from '../../components/auth/RegisterUserForm';
 import { initializeForm, changeField, register } from '../../modules/auth';
 import { check } from '../../modules/user';
 
-const RegisterUserForm = ({ history }) => {
+const RegisterUserFormContainer = ({ history }) => {
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
     form: auth.register,
@@ -13,7 +13,7 @@ const RegisterUserForm = ({ history }) => {
     authError: auth.authError,
     user: user.user,
   }));
-  
+
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -31,9 +31,9 @@ const RegisterUserForm = ({ history }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { email, password, passwordConfirm, nick } = form;
+    const { email, password, passwordConfirm, nick, phone } = form;
 
-    if ([email, password, passwordConfirm, nick].includes('')) {
+    if ([email, password, passwordConfirm, nick, phone].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
       return;
     }
@@ -47,7 +47,7 @@ const RegisterUserForm = ({ history }) => {
       return;
     }
 
-    dispatch(register({ email, password, nick }));
+    dispatch(register({ email, password, nick, phone }));
   };
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const RegisterUserForm = ({ history }) => {
       setError('회원가입 실패');
     } else {
       setError(null);
-      
+
       if (auth) {
         dispatch(check());
       }
@@ -78,8 +78,7 @@ const RegisterUserForm = ({ history }) => {
   }, [history, user]);
 
   return (
-    <AuthForm
-      type="register"
+    <RegisterUserForm
       form={form}
       error={error}
       onChange={handleChange}
@@ -88,4 +87,4 @@ const RegisterUserForm = ({ history }) => {
   );
 };
 
-export default withRouter(RegisterUserForm);
+export default withRouter(RegisterUserFormContainer);

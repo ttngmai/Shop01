@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import qs from 'qs';
-import ProductList from '../../components/products/ProductList';
 import { listProducts } from '../../modules/products';
+import ProductList from '../../components/products/ProductList';
 
 const ProductListContainer = ({ location }) => {
   const dispatch = useDispatch();

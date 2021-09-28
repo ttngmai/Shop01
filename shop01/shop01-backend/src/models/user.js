@@ -21,17 +21,8 @@ module.exports = class User extends Sequelize.Model {
           unique: true,
         },
         phone: {
-          type: Sequelize.STRING(20),
+          type: Sequelize.STRING(11),
           allowNull: true,
-        },
-        addresss: {
-          type: Sequelize.STRING(200),
-          allowNull: true,
-        },
-        status: {
-          type: Sequelize.STRING(20),
-          allowNull: false,
-          defaultValue: 'OPEN',
         },
         created_at: {
           type: Sequelize.DATE,
@@ -57,9 +48,13 @@ module.exports = class User extends Sequelize.Model {
 
   static associate(db) {
     db.User.belongsTo(db.Role, { foreignkey: 'role_id', targetKey: 'id' });
+    db.User.hasMany(db.ShippingAddress, {
+      foreignKey: 'user_id',
+      sourceKey: 'id',
+    });
     db.User.hasOne(db.Cart, { foreignKey: 'user_id', sourceKey: 'id' });
     db.User.hasMany(db.Order, { foreignKey: 'user_id', sourceKey: 'id' });
-    db.User.hasMany(db.Comment, { foreignKey: 'user_id', sourceKey: 'id' });
+    db.User.hasMany(db.Review, { foreignKey: 'user_id', sourceKey: 'id' });
   }
 
   static findByEmail(email) {

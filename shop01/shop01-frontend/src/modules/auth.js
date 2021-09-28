@@ -22,11 +22,15 @@ export const changeField = createAction(
     value,
   }),
 );
-export const register = createAction(REGISTER, ({ email, password, nick }) => ({
-  email,
-  password,
-  nick,
-}));
+export const register = createAction(
+  REGISTER,
+  ({ email, password, nick, phone }) => ({
+    email,
+    password,
+    nick,
+    phone,
+  }),
+);
 export const login = createAction(LOGIN, ({ email, password }) => ({
   email,
   password,
@@ -46,6 +50,7 @@ const initialState = {
     password: '',
     passwordConfirm: '',
     nick: '',
+    phone: '',
   },
   login: {
     email: '',

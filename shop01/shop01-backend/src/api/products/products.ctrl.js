@@ -1,8 +1,10 @@
 const Joi = require('joi');
+const { sequelize } = require('../../models');
 const { Op } = require('sequelize');
 const Product = require('../../models/product');
 const ProductCategory = require('../../models/productCategory');
 const ProductImage = require('../../models/productImage');
+const Review = require('../../models/review');
 
 exports.register = async (req, res, next) => {
   const schema = Joi.object().keys({
@@ -68,6 +70,7 @@ exports.list = async (req, res, next) => {
   console.log(whereClause);
 
   try {
+    const productsPerPage = 12;
     const products = await Product.findAll({
       where: whereClause,
       include: [
@@ -79,12 +82,20 @@ exports.list = async (req, res, next) => {
         },
       ],
       order: [['id', 'DESC']],
-      limit: 12,
-      offset: (page - 1) * 12,
+      limit: productsPerPage,
+      offset: (page - 1) * productsPerPage,
     });
 
-    const productsCount = await Product.count(); // 조건에 따라 표시해야 되므로 findAndCountAll() 사용해 볼 것!
-    res.set('Products-Last-Page', Math.ceil(productsCount / 12)).json(products);
+    const { count: productsTotalCount } = await Product.findAndCountAll({
+      where: whereClause,
+    });
+
+    res
+      .set(
+        'Products-Total-Page',
+        Math.ceil(productsTotalCount / productsPerPage),
+      )
+      .json(products);
   } catch (err) {
     console.log(err);
     next(err);
@@ -110,6 +121,28 @@ exports.read = async (req, res, next) => {
     if (!product) {
       res.status(404).end();
       return;
+    }
+
+    const reviews = await Review.findAll({
+      where: { product_id: id },
+      attributes: [
+        [sequelize.fn('COUNT', sequelize.col('id')), 'reviews_total_count'],
+        [
+          sequelize.fn(
+            'TRUNCATE',
+            sequelize.fn('AVG', sequelize.col('star_rating')),
+            1,
+          ),
+          'star_rating_average',
+        ],
+      ],
+    });
+
+    if (reviews.length > 0) {
+      product.dataValues.reviews_total_count =
+        reviews[0].dataValues.reviews_total_count;
+      product.dataValues.star_rating_average =
+        reviews[0].dataValues.star_rating_average;
     }
 
     res.json(product);

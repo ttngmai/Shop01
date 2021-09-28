@@ -31,13 +31,22 @@ const WhiteBox = styled.div`
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.025);
 `;
 
-const AuthTemplate = ({ children }) => {
+const Heading = styled.h1`
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+`;
+
+const AuthTemplate = ({ heading, children }) => {
   return (
     <AuthTemplateBlock>
       <WhiteBox>
         <div className="logo-area">
           <Link to="/"><img src="/images/logo.png" alt="logo" /></Link>
         </div>
+        <Heading>
+          {heading}
+        </Heading>
         {children}
       </WhiteBox>
     </AuthTemplateBlock>

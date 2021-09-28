@@ -9,7 +9,7 @@ module.exports = class Cart extends Sequelize.Model {
           allowNull: false,
           defaultValue: 1,
         },
-        create_at: {
+        created_at: {
           type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.NOW,
@@ -30,6 +30,9 @@ module.exports = class Cart extends Sequelize.Model {
 
   static associate(db) {
     db.Cart.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
-    db.Cart.belongsTo(db.Product, { foreignKey: 'product_id', targetKey: 'id' });
+    db.Cart.belongsTo(db.Product, {
+      foreignKey: 'product_id',
+      targetKey: 'id',
+    });
   }
 };

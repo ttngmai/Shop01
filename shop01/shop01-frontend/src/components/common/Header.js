@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { VscTriangleDown } from 'react-icons/vsc';
+import { BiChevronDown } from 'react-icons/bi';
 import Responsive from './Responsive';
 import Button from './Button';
 import palette from '../../lib/styles/palette';
+import ProductCategoryMenuContainer from '../../containers/common/ProductCategoryMenuContainer';
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -30,11 +31,6 @@ const Wrapper = styled(Responsive)`
   .logo-area:hover {
     color: ${palette.indigo[7]};
   }
-
-  .right {
-    display: flex;
-    align-items: center;
-  }
 `;
 
 const Spacer = styled.div`
@@ -42,10 +38,9 @@ const Spacer = styled.div`
 `;
 
 const UserMenuBlock = styled.div`
+  align-self: stretch;
   display: flex;
-  align-items: center;
   position: relative;
-  margin-right: 1rem;
 
   .sir {
     padding: 0 0.2rem;
@@ -53,34 +48,45 @@ const UserMenuBlock = styled.div`
 `;
 
 const UserMenuHeading = styled.div`
+  display: flex;
+  align-items: center;
   cursor: pointer;
+
+  & > svg {
+    margin-top: 2px;
+  }
 `;
+
 const UserMenuContent = styled.nav`
   position: absolute;
-  top: 1.95rem;
+  top: 3.5rem;
   right: 0;
   width: 100px;
   border-radius: 4px;
   background-color: white;
-  border: 1px solid ${palette.gray[5]};
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 
   &[aria-expanded='true'] {
     display: none;
   }
 
   li {
-    padding: 0.25rem 0.5rem;
-
-    a,
-    span {
+    a {
+      display: block;
+      padding: 0.25rem 0.5rem;
       cursor: pointer;
     }
 
-    a:hover,
-    span:hover {
+    a:hover {
       color: ${palette.indigo[7]};
     }
   }
+`;
+
+const StyledButton = styled(Button)`
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
 `;
 
 const UserMenu = ({ nick, onLogout }) => {
@@ -116,7 +122,7 @@ const UserMenu = ({ nick, onLogout }) => {
       <UserMenuHeading onClick={handleToggle}>
         {nick}
         <span className="sir">님</span>
-        <VscTriangleDown />
+        <BiChevronDown />
       </UserMenuHeading>
       <UserMenuContent ref={dropdownRef} aria-expanded={!isDropdownOpen}>
         <ul>
@@ -130,9 +136,9 @@ const UserMenu = ({ nick, onLogout }) => {
             <Link to="/user/order">주문 목록</Link>
           </li>
           <li>
-            <Button onClick={onLogout} borderless>
+            <StyledButton onClick={onLogout} borderless>
               로그아웃
-            </Button>
+            </StyledButton>
           </li>
         </ul>
       </UserMenuContent>
@@ -145,17 +151,14 @@ const Header = ({ user, onLogout }) => {
     <>
       <HeaderBlock>
         <Wrapper>
+          <ProductCategoryMenuContainer />
           <Link to="/" className="logo-area">
             SHOP01
           </Link>
           {user ? (
-            <div className="right">
-              <UserMenu nick={user.nick} onLogout={onLogout} />
-            </div>
+            <UserMenu nick={user.nick} onLogout={onLogout} />
           ) : (
-            <div className="right">
-              <Button to="/user/login">로그인</Button>
-            </div>
+            <Link to="/user/login">로그인</Link>
           )}
         </Wrapper>
       </HeaderBlock>
