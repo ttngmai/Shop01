@@ -3,6 +3,27 @@ const Joi = require('joi');
 const ProductCategory = require('../../models/productCategory');
 const convertToTrees = require('../../lib/convertToTrees');
 
+const getSubCategoriesRecursive = async (category) => {
+  let subCategories = await ProductCategory.findAll({
+    where: {
+      parent_id: category.id,
+    },
+    raw: true,
+  });
+
+  if (subCategories.length > 0) {
+    const promises = [];
+
+    subCategories.forEach((subCategory) => {
+      promises.push(getSubCategoriesRecursive(subCategory));
+    });
+
+    category['children'] = await Promise.all(promises);
+  }
+
+  return category;
+};
+
 exports.create = async (req, res, next) => {
   const schema = Joi.object()
     .keys({
@@ -115,6 +136,24 @@ exports.delete = async (req, res, next) => {
     });
 
     res.status(204).end();
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+exports.test = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const category = await ProductCategory.findOne({
+      where: { id },
+      raw: true,
+    });
+
+    const result = await getSubCategoriesRecursive(category);
+
+    res.json(result);
   } catch (err) {
     console.log(err);
     next(err);

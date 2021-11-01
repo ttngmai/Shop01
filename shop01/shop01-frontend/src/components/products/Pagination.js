@@ -10,7 +10,7 @@ import {
   BiChevronsRight,
 } from 'react-icons/bi';
 import palette from '../../lib/styles/palette';
-import Button from '../common/Button';
+import IconButton from '../common/IconButton';
 
 const PaginationBlock = styled.div`
   display: flex;
@@ -22,14 +22,7 @@ const PaginationBlock = styled.div`
   margin: 0 auto;
 `;
 
-const StyledButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-`;
+const StyledButton = styled(IconButton)``;
 
 const StyledButtonWithMarginRight = styled(StyledButton)`
   margin-right: 0.25rem;
@@ -97,6 +90,7 @@ const Pagination = ({ category, name, page, totalPage }) => {
       <StyledButtonWithMarginRight
         disabled={page === 1}
         to={page === 1 ? undefined : buildLink({ category, name, page: 1 })}
+        size="large"
       >
         <BiChevronsLeft />
       </StyledButtonWithMarginRight>
@@ -105,6 +99,7 @@ const Pagination = ({ category, name, page, totalPage }) => {
         to={
           page === 1 ? undefined : buildLink({ category, name, page: page - 1 })
         }
+        size="large"
       >
         <BiChevronLeft />
       </StyledButton>
@@ -126,6 +121,7 @@ const Pagination = ({ category, name, page, totalPage }) => {
             ? undefined
             : buildLink({ category, name, page: page + 1 })
         }
+        size="large"
       >
         <BiChevronRight />
       </StyledButton>
@@ -136,6 +132,7 @@ const Pagination = ({ category, name, page, totalPage }) => {
             ? undefined
             : buildLink({ category, name, page: totalPage })
         }
+        size="large"
       >
         <BiChevronsRight />
       </StyledButtonWithMarginLeft>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { IoHappyOutline } from 'react-icons/io5';
 import palette from '../../lib/styles/palette';
+import WhiteBox from '../common/WhiteBox';
 import Button from '../common/Button';
+import { IoHappyOutline } from 'react-icons/io5';
 import addComma from '../../lib/addComma';
 
 const OrderSuccessBlock = styled.div`
@@ -38,15 +39,17 @@ const OrderSuccess = () => {
   }
 
   return (
-    <OrderSuccessBlock>
-      <IoHappyOutline />
-      <p>주문이 성공적으로 완료되었습니다.</p>
-      <OrderInfo>
-        <p>상품명: {location.state.name}</p>
-        <p>상품 금액: {addComma(location.state.amount)}원</p>
-      </OrderInfo>
-      <Button to={'/user/order'}>주문 목록</Button>
-    </OrderSuccessBlock>
+    <WhiteBox>
+      <OrderSuccessBlock>
+        <IoHappyOutline />
+        <p>주문이 성공적으로 완료되었습니다.</p>
+        <OrderInfo>
+          <p>상품명: {location.state.name}</p>
+          <p>상품 금액: {addComma(location.state.amount)}원</p>
+        </OrderInfo>
+        <Button to={'/user/order-list'}>주문 목록</Button>
+      </OrderSuccessBlock>
+    </WhiteBox>
   );
 };
 

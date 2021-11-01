@@ -13,8 +13,7 @@ const CheckAllBoxLabel = styled.label`
   cursor: pointer;
 
   svg {
-    width: 2rem;
-    height: 2rem;
+    margin-top: 1.5px;
     color: ${palette.gray[5]};
 
     &.checked {
@@ -44,9 +43,9 @@ const CheckAllBox = ({
   return (
     <CheckAllBoxLabel>
       {isAllChecked ? (
-        <IoCheckmarkCircleSharp className="checked" />
+        <IoCheckmarkCircleSharp className="checked" size="2rem" />
       ) : (
-        <IoCheckmarkCircleOutline />
+        <IoCheckmarkCircleOutline size="2rem" />
       )}
       <input
         type="checkbox"

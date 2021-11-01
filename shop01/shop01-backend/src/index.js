@@ -14,8 +14,8 @@ const app = express();
 app.set('port', process.env.PORT || 4000);
 
 const api = require('./api');
-const createDummy = require('./createDummy'); // 더미 데이터 생성
-const jwtMiddleware  = require('./lib/jwtMiddleware');
+const createData = require('./createData'); // 더미 데이터 생성
+const jwtMiddleware = require('./lib/jwtMiddleware');
 
 try {
   fs.readdirSync('uploads');
@@ -27,7 +27,7 @@ sequelize
   .sync({ force: true })
   .then(() => {
     console.log('데이터베이스 연결 성공.');
-    createDummy(); // 더미 데이터 생성
+    createData(); // 더미 데이터 생성
   })
   .catch((err) => {
     console.log(err);
@@ -38,7 +38,7 @@ app.use(morgan('dev'));
 app.use('/images', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.COOKIE_SECRET, { sameSite: "none" }));
+app.use(cookieParser(process.env.COOKIE_SECRET, { sameSite: 'none' }));
 app.use(
   session({
     resave: false,

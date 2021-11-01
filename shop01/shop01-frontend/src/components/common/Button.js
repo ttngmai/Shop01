@@ -4,14 +4,20 @@ import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 
 const buttonStyle = css`
-  padding: 0.25rem 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid ${palette.indigo[7]};
   border-radius: 4px;
   background-color: white;
-  font-size: 1rem;
   color: ${palette.indigo[7]};
   cursor: pointer;
   transition: all 0.3s;
+
+  svg {
+    align-self: flex-end;
+    margin-right: 0.5rem;
+  }
 
   &:not(:disabled):hover {
     background-color: ${palette.indigo[7]};
@@ -26,12 +32,12 @@ const buttonStyle = css`
     cursor: not-allowed;
   }
 
+  ${(props) => props.$sizeStyle}
+
   ${(props) =>
     props.fullWidth &&
     css`
       width: 100%;
-      padding: 0.75rem 0;
-      font-size: 1.125rem;
     `}
 `;
 
@@ -54,8 +60,6 @@ const borderlessButtonStyle = css`
     props.fullWidth &&
     css`
       width: 100%;
-      padding: 0.75rem 0;
-      font-size: 1.125rem;
     `}
 `;
 
@@ -67,8 +71,27 @@ const StyledLink = styled(Link)`
   ${buttonStyle}
 `;
 
-const Button = (props) => {
-  return props.to ? <StyledLink {...props} /> : <StyledButton {...props} />;
+const sizeStyle = {
+  small: css`
+    padding: 0;
+    font-size: 0.875rem;
+  `,
+  medium: css`
+    padding: 0.25rem;
+    font-size: 1rem;
+  `,
+  large: css`
+    padding: 0.5rem;
+    font-size: 1.25rem;
+  `,
+};
+
+const Button = ({ size = 'medium', ...rest }) => {
+  return rest.to ? (
+    <StyledLink $sizeStyle={sizeStyle[size]} {...rest} />
+  ) : (
+    <StyledButton $sizeStyle={sizeStyle[size]} {...rest} />
+  );
 };
 
 export default Button;

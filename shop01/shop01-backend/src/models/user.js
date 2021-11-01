@@ -29,9 +29,6 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
           defaultValue: Sequelize.NOW,
         },
-        role_id: {
-          type: Sequelize.INTEGER,
-        },
       },
       {
         sequelize,
@@ -75,7 +72,6 @@ module.exports = class User extends Sequelize.Model {
     const data = this.toJSON();
     delete data.password;
     delete data.phone;
-    delete data.addresss;
     return data;
   }
 
@@ -83,9 +79,6 @@ module.exports = class User extends Sequelize.Model {
     const token = jwt.sign(
       {
         id: this.id,
-        email: this.email,
-        nick: this.nick,
-        role_id: this.role_id,
       },
       process.env.JWT_SECRET,
       {

@@ -1,7 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import Button from '../common/Button';
 import { BiCart, BiDollarCircle } from 'react-icons/bi';
-import palette from '../../lib/styles/palette';
 
 const ProductOrderButtonsBlock = styled.div`
   display: flex;
@@ -9,41 +9,11 @@ const ProductOrderButtonsBlock = styled.div`
   align-items: center;
 `;
 
-const buttonStyle = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 3.5rem;
-  border: 1px solid ${palette.indigo[7]};
-  border-radius: 4px;
-  background-color: white;
-  font-size: 1.25rem;
-  color: ${palette.indigo[7]};
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &:hover {
-    background-color: ${palette.indigo[7]};
-    color: white;
-    box-shadow: 0px 2px 8px #4c72ff;
-  }
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 0.5rem;
-  }
-`;
-
-const AddToCartButton = styled.button`
-  ${buttonStyle}
+const AddToCartButton = styled(Button)`
   margin-right: 0.5rem;
 `;
 
-const OrderButton = styled.button`
-  ${buttonStyle}
-`;
+const OrderButton = styled(Button)``;
 
 const ProductOrderButtons = ({
   onAddToCartButtonClick,
@@ -51,12 +21,22 @@ const ProductOrderButtons = ({
 }) => {
   return (
     <ProductOrderButtonsBlock>
-      <AddToCartButton type="button" onClick={onAddToCartButtonClick}>
-        <BiCart />
+      <AddToCartButton
+        type="button"
+        onClick={onAddToCartButtonClick}
+        size="large"
+        fullWidth
+      >
+        <BiCart size="1.5rem" />
         담기
       </AddToCartButton>
-      <OrderButton type="button" onClick={onOrderButtonClick}>
-        <BiDollarCircle />
+      <OrderButton
+        type="button"
+        onClick={onOrderButtonClick}
+        size="large"
+        fullWidth
+      >
+        <BiDollarCircle size="1.5rem" />
         주문
       </OrderButton>
     </ProductOrderButtonsBlock>

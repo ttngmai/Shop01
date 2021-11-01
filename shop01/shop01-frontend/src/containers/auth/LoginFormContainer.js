@@ -1,43 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import LoginForm from '../../components/auth/LoginForm';
-import { initializeForm, changeField, login } from '../../modules/auth';
+import { initializeForm, login } from '../../modules/auth';
 import { check } from '../../modules/user';
 
 const LoginFormContainer = ({ history }) => {
   const dispatch = useDispatch();
-  const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
-    form: auth.login,
+  const { auth, authError, user } = useSelector(({ auth, user }) => ({
     auth: auth.auth,
-    authError: auth.authError,
+    authError: auth.error,
     user: user.user,
   }));
 
   const [error, setError] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleSubmit = useCallback(
+    (data) => {
+      const { email, password } = data;
 
-    dispatch(
-      changeField({
-        form: 'login',
-        key: name,
-        value,
-      }),
-    );
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { email, password } = form;
-
-    dispatch(login({ email, password }));
-  };
+      dispatch(login({ email, password }));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(initializeForm('login'));
+    return () => dispatch(initializeForm());
   }, [dispatch]);
 
   useEffect(() => {
@@ -58,14 +46,7 @@ const LoginFormContainer = ({ history }) => {
     }
   }, [history, user]);
 
-  return (
-    <LoginForm
-      form={form}
-      error={error}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-    />
-  );
+  return <LoginForm error={error} onSubmit={handleSubmit} />;
 };
 
 export default withRouter(LoginFormContainer);

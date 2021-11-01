@@ -1,67 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
-import Button from '../common/Button';
+import Joi from 'joi';
+import { useForm, FormProvider } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
+import Step1 from './RegisterUserForm/Step1';
+import Step2 from './RegisterUserForm/Step2';
+import Button from '../common/Button';
 
-const RegisterUserFormBlock = styled.div`
-  h1 {
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 1.5rem;
-  }
+const RegisterUserFormBlock = styled.div``;
+
+const RegisterUserErrorMessage = styled.div`
+  margin-top: 1rem;
+  margin-bottom: -1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: ${palette.red[7]};
 `;
 
-const StyledInputBlock = styled.div`
+const ButtonsBox = styled.div`
   display: flex;
-  flex-direction: column;
-  position: relative;
-
-  & + & {
-    padding-top: 1.5rem;
-  }
-
-  input {
-    z-index: 1;
-    width: 100%;
-    padding-bottom: 0.25rem;
-    border-bottom: 1px solid ${palette.gray[3]};
-    background-color: transparent;
-    line-height: 1.2rem;
-    font-size: 1rem;
-    outline: none;
-
-    &:focus {
-      border-bottom: 1px solid ${palette.gray[5]};
-    }
-
-    &:focus + label {
-      bottom: 1.7rem;
-      font-size: 0.75rem;
-      color: black;
-    }
-
-    ${(props) =>
-      props.value &&
-      css`
-        & + label {
-          bottom: 1.7rem;
-          font-size: 0.75rem;
-          color: black;
-        }
-      `};
-  }
-
-  label {
-    position: absolute;
-    bottom: 0.25rem;
-    color: ${palette.gray[5]};
-    transition: all 0.5s;
-  }
-`;
-
-const ButtonWithMarginTop = styled(Button)`
+  justify-content: center;
+  align-items: center;
   margin-top: 2rem;
+
+  button:not(:last-of-type) {
+    margin-right: 0.5rem;
+  }
 `;
 
 const Footer = styled.div`
@@ -73,79 +39,145 @@ const Footer = styled.div`
   }
 `;
 
-const ErrorMessage = styled.div`
-  color: red;
-  text-align: center;
-  font-size: 0.875rem;
-  margin-top: 1rem;
-`;
-
-const StyledInput = ({
-  type,
-  autoComplete,
-  name,
-  value,
-  labelText,
-  onChange,
-}) => {
-  return (
-    <StyledInputBlock value={value}>
-      <input
-        type={type}
-        autoComplete={autoComplete}
-        name={name}
-        value={value}
-        onChange={onChange}
-      />
-      <label>{labelText}</label>
-    </StyledInputBlock>
-  );
+const getStepContent = (step) => {
+  switch (step) {
+    case 0:
+      return <Step1 />;
+    case 1:
+      return <Step2 />;
+    default:
+      return 'Unknown step';
+  }
 };
 
-const RegisterUserForm = ({ form, error, onChange, onSubmit }) => {
+const fields = [
+  ['email', 'password', 'confirmPassword', 'nick'],
+  ['phone', 'postCode', 'address1', 'address2'],
+];
+
+const RegisterUserForm = ({ error, onSubmit }) => {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const steps = ['Step1', 'Step2'];
+
+  const schema = Joi.object({
+    email: Joi.string()
+      .required()
+      .pattern(
+        /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+      )
+      .messages({
+        'string.empty': '⚠ 이메일을 입력해 주세요.',
+        'any.required': '⚠ 이메일을 입력해 주세요.',
+        'string.pattern.base': '⚠ 올바른 형식의 이메일을 입력해 주세요.',
+      }),
+    password: Joi.string().required().messages({
+      'string.empty': '⚠ 비밀번호를 입력해 주세요.',
+      'any.required': '⚠ 비밀번호를 입력해 주세요.',
+    }),
+    confirmPassword: Joi.string()
+      .required()
+      .valid(Joi.ref('password'))
+      .messages({
+        'string.empty': '⚠ 비밀번호를 한번 더 입력해 주세요.',
+        'any.required': '⚠ 비밀번호를 한번 더 입력해 주세요.',
+        'any.only': '⚠ 비밀번호와 일치하지 않습니다.',
+      }),
+    nick: Joi.string().max(15).required().messages({
+      'string.empty': '⚠ 닉네임을 입력해 주세요.',
+      'any.required': '⚠ 닉네임을 입력해 주세요.',
+      'string.max': '⚠ 닉네임은 최대 15글자 입니다.',
+    }),
+    phone: Joi.string()
+      .pattern(/^[0-9]*$/)
+      .max(11)
+      .required()
+      .messages({
+        'string.empty': '⚠ 휴대폰 번호를 입력해 주세요.',
+        'any.required': '⚠ 휴대폰 번호를 입력해 주세요.',
+        'string.pattern.base': '⚠ 숫자만 입력해 주세요.',
+        'string.max': '⚠ 휴대폰 번호는 최대 11글자 입니다.',
+      }),
+    postCode: Joi.string().max(5).required(),
+    address1: Joi.string().max(100).required().messages({
+      'string.max': '⚠ 주소는 최대 100글자 입니다.',
+    }),
+    address2: Joi.string().optional().allow('').max(100).messages({
+      'string.max': '⚠ 상세 주소는 최대 100글자 입니다.',
+    }),
+  });
+
+  const methods = useForm({
+    mode: 'onChange',
+    resolver: joiResolver(schema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+      nick: '',
+      phone: '',
+      postCode: '',
+      address1: '',
+      address2: '',
+    },
+  });
+  const {
+    formState: { isValid },
+    trigger,
+    handleSubmit,
+    watch,
+  } = methods;
+
+  const handleNext = async () => {
+    const isStepValid = await trigger(fields[activeStep]);
+
+    if (isStepValid) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  console.log(watch());
+  
   return (
     <RegisterUserFormBlock>
-      <form onSubmit={onSubmit}>
-        <StyledInput
-          autoComplete="email"
-          name="email"
-          value={form.email}
-          labelText="이메일"
-          onChange={onChange}
-        />
-        <StyledInput
-          type="password"
-          autoComplete="new-password"
-          name="password"
-          value={form.password}
-          labelText="비밀번호"
-          onChange={onChange}
-        />
-        <StyledInput
-          type="password"
-          autoComplete="new-password"
-          name="passwordConfirm"
-          value={form.passwordConfirm}
-          labelText="비밀번호 확인"
-          onChange={onChange}
-        />
-        <StyledInput
-          autoComplete="off"
-          name="nick"
-          value={form.nick}
-          labelText="닉네임"
-          onChange={onChange}
-        />
-        <StyledInput
-          autoComplete="off"
-          name="phone"
-          value={form.phone}
-          labelText="휴대폰"
-          onChange={onChange}
-        />
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <ButtonWithMarginTop fullWidth>회원가입</ButtonWithMarginTop>
-      </form>
+      <FormProvider {...methods}>
+        <form>
+          {getStepContent(activeStep)}
+          {error && (
+            <RegisterUserErrorMessage>{error}</RegisterUserErrorMessage>
+          )}
+          <ButtonsBox>
+            <Button
+              type="button"
+              size="large"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              fullWidth
+            >
+              이전
+            </Button>
+            {activeStep === steps.length - 1 ? (
+              <Button
+                type="button"
+                size="large"
+                disabled={!isValid}
+                onClick={handleSubmit(onSubmit)}
+                fullWidth
+              >
+                회원가입
+              </Button>
+            ) : (
+              <Button type="button" size="large" onClick={handleNext} fullWidth>
+                다음
+              </Button>
+            )}
+          </ButtonsBox>
+        </form>
+      </FormProvider>
       <Footer>
         <Link to="/user/login">로그인</Link>
       </Footer>

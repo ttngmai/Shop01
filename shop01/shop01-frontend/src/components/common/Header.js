@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { BiChevronDown } from 'react-icons/bi';
@@ -84,47 +84,32 @@ const UserMenuContent = styled.nav`
 `;
 
 const StyledButton = styled(Button)`
-  width: 100%;
   padding: 0.25rem 0.5rem;
   text-align: left;
 `;
 
 const UserMenu = ({ nick, onLogout }) => {
-  const dropdownRef = useRef(null);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const handleMouseEnter = () => {
+    setIsDropdownOpen(true);
   };
 
-  useEffect(() => {
-    const pageClickEvent = (e) => {
-      if (
-        dropdownRef.current !== null &&
-        !dropdownRef.current.contains(e.target)
-      ) {
-        setIsDropdownOpen(!isDropdownOpen);
-      }
-    };
-
-    if (isDropdownOpen) {
-      window.addEventListener('click', pageClickEvent);
-    }
-
-    return () => {
-      window.removeEventListener('click', pageClickEvent);
-    };
-  }, [isDropdownOpen]);
+  const handleMouseLeave = () => {
+    setIsDropdownOpen(false);
+  };
 
   return (
-    <UserMenuBlock>
-      <UserMenuHeading onClick={handleToggle}>
+    <UserMenuBlock
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <UserMenuHeading>
         {nick}
         <span className="sir">님</span>
         <BiChevronDown />
       </UserMenuHeading>
-      <UserMenuContent ref={dropdownRef} aria-expanded={!isDropdownOpen}>
+      <UserMenuContent aria-expanded={!isDropdownOpen}>
         <ul>
           <li>
             <Link to="/user/mypage">마이페이지</Link>
@@ -133,10 +118,10 @@ const UserMenu = ({ nick, onLogout }) => {
             <Link to="/user/cart">장바구니</Link>
           </li>
           <li>
-            <Link to="/user/order">주문 목록</Link>
+            <Link to="/user/order-list">주문 목록</Link>
           </li>
           <li>
-            <StyledButton onClick={onLogout} borderless>
+            <StyledButton onClick={onLogout} borderless fullWidth>
               로그아웃
             </StyledButton>
           </li>

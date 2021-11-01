@@ -1,17 +1,20 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router';
-import Header from '../../components/common/Header';
 import { logout } from '../../modules/user';
+import Header from '../../components/common/Header';
 
 const HeaderContainer = ({ history }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector(({ user }) => ({ user: user.user }));
+  const { user } = useSelector(
+    ({ user }) => ({ user: user.user }),
+    shallowEqual,
+  );
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(logout());
     history.push('/');
-  };
+  }, [history, dispatch]);
 
   return <Header user={user} onLogout={handleLogout} />;
 };

@@ -9,7 +9,7 @@ export const listCategories = (name) => {
   return client.get(`/api/categories?${queryString}`);
 };
 
-export const updateCategory = (id, name) =>
+export const updateCategory = ({ id, name }) =>
   client.patch(`/api/categories/${id}`, { name });
 
 export const deleteCategory = (id) => client.delete(`/api/categories/${id}`);

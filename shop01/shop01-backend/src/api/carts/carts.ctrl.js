@@ -9,17 +9,17 @@ exports.create = async (req, res, next) => {
   const { product } = req.body;
 
   try {
-    const exists = await Cart.findOne({
+    const exist = await Cart.findOne({
       where: { product_id: product.id },
     });
 
-    if (exists) {
+    if (exist) {
       const item = await Cart.update(
         {
-          quantity: exists.dataValues.quantity + product.quantity,
+          quantity: exist.dataValues.quantity + product.quantity,
         },
         {
-          where: { id: exists.dataValues.id },
+          where: { id: exist.dataValues.id },
         },
       );
 

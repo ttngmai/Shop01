@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import palette from '../../lib/styles/palette';
 import {
   IoCheckmarkCircleOutline,
   IoCheckmarkCircleSharp,
 } from 'react-icons/io5';
-import palette from '../../lib/styles/palette';
 
 const CheckBoxLabel = styled.label`
   display: flex;

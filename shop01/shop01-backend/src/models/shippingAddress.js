@@ -4,6 +4,10 @@ module.exports = class ShippingAddress extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
+        post_code: {
+          type: Sequelize.STRING(100),
+          allowNull: false,
+        },
         address1: {
           type: Sequelize.STRING(100),
           allowNull: false,
@@ -12,11 +16,16 @@ module.exports = class ShippingAddress extends Sequelize.Model {
           type: Sequelize.STRING(100),
           allowNull: true,
         },
-        isDefault: {
+        is_default: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
           defaultValue: false,
-        }
+        },
+        created_at: {
+          type: Sequelize.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.NOW,
+        },
       },
       {
         sequelize,

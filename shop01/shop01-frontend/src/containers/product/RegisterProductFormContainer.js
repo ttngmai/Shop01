@@ -1,35 +1,19 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  initializeProduct,
-  changeField,
-  registerProduct,
-} from '../../modules/product';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { initializeProduct, registerProduct } from '../../modules/product';
 import RegisterProductForm from '../../components/product/RegisterProductForm';
 
 const RegisterProductFormContainer = () => {
   const dispatch = useDispatch();
-  const { form, error } = useSelector(({ product }) => ({
-    form: product.register,
-    error: product.error,
-  }));
+  const { error } = useSelector(
+    ({ product }) => ({
+      error: product.error,
+    }),
+    shallowEqual,
+  );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    dispatch(
-      changeField({
-        form: 'register',
-        key: name,
-        value,
-      }),
-    );
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { category, name, price, images } = form;
+  const handleSubmit = (data) => {
+    const { category, name, price, images } = data;
     const formData = new FormData();
 
     formData.append('category', category);
@@ -37,8 +21,8 @@ const RegisterProductFormContainer = () => {
     formData.append('price', price);
 
     for (let image of images) {
-      if (image.imageFile) {
-        formData.append('images', image.imageFile);
+      if (image.image?.file) {
+        formData.append('images', image.image.file);
       }
     }
 
@@ -49,14 +33,7 @@ const RegisterProductFormContainer = () => {
     dispatch(initializeProduct());
   }, [dispatch]);
 
-  return (
-    <RegisterProductForm
-      form={form}
-      error={error}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-    />
-  );
+  return <RegisterProductForm error={error} onSubmit={handleSubmit} />;
 };
 
 export default RegisterProductFormContainer;

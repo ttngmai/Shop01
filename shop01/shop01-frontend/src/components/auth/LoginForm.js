@@ -1,66 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
-import Button from '../common/Button';
+import Joi from 'joi';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
+import Input from '../common/Input';
+import Button from '../common/Button';
 
-const LoginFormBlock = styled.div`
-  h1 {
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 1.5rem;
-  }
+const LoginFormBlock = styled.div``;
+
+const LoginErrorMessage = styled.div`
+  margin-top: 1rem;
+  margin-bottom: -1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: ${palette.red[7]};
 `;
 
-const StyledInputBlock = styled.div`
+const ButtonBox = styled.div`
   display: flex;
-  flex-direction: column;
-  position: relative;
-
-  & + & {
-    padding-top: 1.5rem;
-  }
-
-  input {
-    z-index: 1;
-    width: 100%;
-    padding-bottom: 0.25rem;
-    border-bottom: 1px solid ${palette.gray[3]};
-    background-color: transparent;
-    line-height: 1.2rem;
-    font-size: 1rem;
-    outline: none;
-
-    &:focus {
-      border-bottom: 1px solid ${palette.gray[5]};
-    }
-
-    &:focus + label {
-      bottom: 1.7rem;
-      font-size: 0.75rem;
-      color: black;
-    }
-
-    ${(props) =>
-      props.value &&
-      css`
-        & + label {
-          bottom: 1.7rem;
-          font-size: 0.75rem;
-          color: black;
-        }
-      `};
-  }
-
-  label {
-    position: absolute;
-    bottom: 0.25rem;
-    color: ${palette.gray[5]};
-    transition: all 0.5s;
-  }
-`;
-
-const ButtonWithMarginTop = styled(Button)`
+  justify-content: center;
+  align-items: center;
   margin-top: 2rem;
 `;
 
@@ -73,56 +34,50 @@ const Footer = styled.div`
   }
 `;
 
-const ErrorMessage = styled.div`
-  color: red;
-  text-align: center;
-  font-size: 0.875rem;
-  margin-top: 1rem;
-`;
+const LoginForm = ({ error, onSubmit }) => {
+  const schema = Joi.object({
+    email: Joi.string().required().messages({
+      'string.empty': '⚠ 이메일을 입력해 주세요.',
+      'any.required': '⚠ 이메일을 입력해 주세요.',
+    }),
+    password: Joi.string().required().messages({
+      'string.empty': '⚠ 비밀번호를 입력해 주세요.',
+      'any.required': '⚠ 비밀번호를 입력해 주세요.',
+    }),
+  });
 
-const StyledInput = ({
-  type,
-  autoComplete,
-  name,
-  value,
-  labelText,
-  onChange,
-}) => {
-  return (
-    <StyledInputBlock value={value}>
-      <input
-        type={type}
-        autoComplete={autoComplete}
-        name={name}
-        value={value}
-        onChange={onChange}
-      />
-      <label>{labelText}</label>
-    </StyledInputBlock>
-  );
-};
+  const {
+    formState: { errors, isValid },
+    register,
+    control,
+    handleSubmit,
+  } = useForm({
+    mode: 'onChange',
+    resolver: joiResolver(schema),
+  });
 
-const LoginForm = ({ form, error, onChange, onSubmit }) => {
   return (
     <LoginFormBlock>
-      <form onSubmit={onSubmit}>
-        <StyledInput
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
           autoComplete="email"
-          name="email"
-          value={form.email}
-          labelText="이메일"
-          onChange={onChange}
+          label="이메일"
+          control={control}
+          {...register('email')}
         />
-        <StyledInput
+        <Input
           type="password"
           autoComplete="new-password"
-          name="password"
-          value={form.password}
-          labelText="비밀번호"
-          onChange={onChange}
+          label="비밀번호"
+          control={control}
+          {...register('password')}
         />
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <ButtonWithMarginTop fullWidth>로그인</ButtonWithMarginTop>
+        {error && <LoginErrorMessage>{error}</LoginErrorMessage>}
+        <ButtonBox>
+          <Button size="large" disabled={!isValid} fullWidth>
+            로그인
+          </Button>
+        </ButtonBox>
       </form>
       <Footer>
         <Link to="/user/register">회원가입</Link>

@@ -53,6 +53,7 @@ exports.register = async (req, res, next) => {
 };
 
 exports.list = async (req, res, next) => {
+  const { category, name } = req.query;
   const page = parseInt(req.query.page || '1', 10);
 
   if (page < 1) {
@@ -60,7 +61,9 @@ exports.list = async (req, res, next) => {
     return;
   }
 
-  const { category, name } = req.query;
+  console.log('----- category -----')
+  console.log(category);
+
   const whereClause = {
     ...(category ? { category_id: category } : {}),
     ...(name ? { name: { [Op.like]: `%${name}%` } } : {}),

@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import SelectCategoryBox from '../../components/product/SelectCategoryBox';
+import { useFormContext } from 'react-hook-form';
 import { listCategories } from '../../modules/categories';
-import { changeField } from '../../modules/product';
+import SelectCategoryBox from '../../components/product/SelectCategoryBox';
 
 const SelectCategoryBoxContainer = () => {
   const dispatch = useDispatch();
@@ -15,6 +15,9 @@ const SelectCategoryBoxContainer = () => {
   );
 
   const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const didMount = useRef(false);
+  const { register, setValue } = useFormContext();
 
   const handleClick = useCallback(
     (category) => {
@@ -40,22 +43,21 @@ const SelectCategoryBoxContainer = () => {
 
   useEffect(() => {
     dispatch(listCategories());
-  }, [dispatch]);
+    register('category');
+  }, [dispatch, register]);
 
   useEffect(() => {
-    const selectedCategoryId =
+    const id =
       selectedCategories.length > 0
         ? selectedCategories[selectedCategories.length - 1].id
         : null;
 
-    dispatch(
-      changeField({
-        form: 'register',
-        key: 'category',
-        value: selectedCategoryId,
-      }),
-    );
-  }, [selectedCategories, dispatch]);
+    if (didMount.current) {
+      setValue('category', id, { shouldValidate: true, shouldDirty: true });
+    } else {
+      didMount.current = true;
+    }
+  }, [selectedCategories, setValue, dispatch]);
 
   return (
     <SelectCategoryBox

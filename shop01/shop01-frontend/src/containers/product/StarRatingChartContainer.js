@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { readStarRating } from '../../modules/reviews';
 import StarRatingChart from '../../components/product/StarRatingChart';
@@ -14,6 +14,7 @@ const StarRatingChartContainer = ({ match }) => {
       loading: loading['reviews/READ_STAR_RATING'],
       error: reviews.error,
     }),
+    shallowEqual,
   );
 
   useEffect(() => {

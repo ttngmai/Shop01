@@ -1,7 +1,15 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import Cart from '../../components/cart/Cart';
 import { initializeCart, readCart } from '../../modules/cart';
+import {
+  initializeShippingAddresses,
+  listShippingAddresses,
+} from '../../modules/shippingAddresses';
+import {
+  initializeForm,
+  readShippingAddress,
+} from '../../modules/shippingAddress';
 
 const CartContainer = () => {
   const dispatch = useDispatch();
@@ -12,13 +20,18 @@ const CartContainer = () => {
       loading: loading['cart/READ_CART'],
       error: cart.error,
     }),
+    shallowEqual,
   );
 
   useEffect(() => {
     dispatch(readCart());
+    dispatch(listShippingAddresses());
+    dispatch(readShippingAddress());
 
     return () => {
       dispatch(initializeCart());
+      dispatch(initializeForm('read'));
+      dispatch(initializeShippingAddresses());
     };
   }, [dispatch]);
 

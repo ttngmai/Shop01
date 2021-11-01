@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IoAlertCircleSharp } from 'react-icons/io5';
-import addComma from '../../lib/addComma';
 import palette from '../../lib/styles/palette';
+import WhiteBox from '../common/WhiteBox';
 import ProductRefundButtonContainer from '../../containers/orders/ProductRefundButtonContainer';
 import WriteReviewButtonContainer from '../../containers/orders/WriteReviewButtonContainer';
+import { IoAlertCircleSharp } from 'react-icons/io5';
+import addComma from '../../lib/addComma';
 
 const OrderListBlock = styled.div``;
 
@@ -25,7 +26,7 @@ const EmptyOrderList = styled.div`
   }
 `;
 
-const OrderDetailListBlock = styled.li`
+const OrderDetailListBlock = styled.ul`
   padding-bottom: 2rem;
 `;
 
@@ -33,7 +34,7 @@ const OrderDate = styled.div`
   padding-bottom: 0.5rem;
 `;
 
-const OrderDetailItemBlock = styled.div`
+const OrderDetailItemBlock = styled.li`
   display: grid;
   align-items: center;
   grid-template-columns: 15% 70% 15%;
@@ -93,7 +94,7 @@ const ProductInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 2rem;
 
   p {
     padding-bottom: 0.5rem;
@@ -106,6 +107,7 @@ const ProductInfo = styled.div`
   }
 
   .product-quantity {
+    padding-left: 0.5rem;
     color: ${palette.gray[5]};
   }
 `;
@@ -117,15 +119,16 @@ const OrderDetailItem = ({ orderDetail }) => {
         <img src={`/images/${orderDetail.image}`} alt={orderDetail.name} />
       </ProductImageBox>
       <ProductInfo>
-        <p>
-          {orderDetail.name}
-          <span className="product-quantity"> ({orderDetail.quantity}개)</span>
-        </p>
+        <p>{orderDetail.name}</p>
         <p>
           <em className="num">
             {addComma(orderDetail.price * orderDetail.quantity)}
           </em>
           원
+          <span className="product-quantity">
+            {' '}
+            ({orderDetail.quantity}개 구매)
+          </span>
         </p>
       </ProductInfo>
       <WriteReviewButtonContainer productId={orderDetail.product_id} />
@@ -158,30 +161,38 @@ const OrderDetailList = ({ order }) => {
 };
 
 const OrderList = ({ orders, loading, error }) => {
-  if (error) {
-    return <OrderListBlock>에러가 발생했습니다.</OrderListBlock>;
+  if (!orders || loading) {
+    return null;
   }
 
-  if (loading || !orders) {
-    return null;
+  if (error) {
+    return (
+      <OrderListBlock>
+        <WhiteBox>에러가 발생했습니다.</WhiteBox>
+      </OrderListBlock>
+    );
   }
 
   if (orders.length === 0) {
     return (
       <OrderListBlock>
-        <EmptyOrderList>
-          <IoAlertCircleSharp />
-          <p>주문 목록이 없습니다.</p>
-        </EmptyOrderList>
+        <WhiteBox>
+          <EmptyOrderList>
+            <IoAlertCircleSharp />
+            <p>주문 목록이 없습니다.</p>
+          </EmptyOrderList>
+        </WhiteBox>
       </OrderListBlock>
     );
   }
 
   return (
     <OrderListBlock>
-      {orders.map((order) => (
-        <OrderDetailList key={order.id} order={order} />
-      ))}
+      <WhiteBox>
+        {orders.map((order) => (
+          <OrderDetailList key={order.id} order={order} />
+        ))}
+      </WhiteBox>
     </OrderListBlock>
   );
 };

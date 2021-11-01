@@ -63,17 +63,14 @@ const ProductInfo = styled.div`
 
   .product-category {
     display: inline-block;
-    padding: 0.2em;
-    margin-bottom: 1rem;
-    border-radius: 0.5em;
-    background-color: black;
+    margin-bottom: 0.5rem;
     font-size: 0.75rem;
-    color: white;
+    color: ${palette.gray[5]};
   }
 
   .product-name {
     display: block;
-    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-weight: 400;
     white-space: pre-line;
 

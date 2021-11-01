@@ -1,8 +1,8 @@
 import client from './client';
 import qs from 'qs';
 
-export const registerProduct = (data) =>
-  client.post('/api/products', data, {
+export const registerProduct = (formData) =>
+  client.post('/api/products', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 

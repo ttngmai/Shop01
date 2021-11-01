@@ -1,16 +1,16 @@
 import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
-import WhiteBoxTemplate from '../components/common/WhiteBoxTemplate';
+import ResponsiveBoxTemplate from '../components/common/ResponsiveBoxTemplate';
 import OrderSuccess from '../components/orders/OrderSuccess';
 
 const OrderSuccessPage = () => {
   return (
     <Background>
       <HeaderContainer />
-      <WhiteBoxTemplate heading="주문 성공">
+      <ResponsiveBoxTemplate heading="주문 성공">
         <OrderSuccess />
-      </WhiteBoxTemplate>
+      </ResponsiveBoxTemplate>
     </Background>
   );
 };

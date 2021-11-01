@@ -7,7 +7,7 @@ const ItemQuantityInputBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 120px;
+  max-width: 100px;
   border: 1px solid ${palette.gray[3]};
   border-radius: 4px;
   overflow: hidden;
@@ -17,15 +17,11 @@ const QuantityButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   width: 2rem;
   height: 2rem;
   background-color: white;
   cursor: pointer;
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
 `;
 
 const QuantityMinusButton = styled(QuantityButton)``;
@@ -33,12 +29,13 @@ const QuantityMinusButton = styled(QuantityButton)``;
 const QuantityPlusButton = styled(QuantityButton)``;
 
 const StyledInput = styled.input`
-  width: calc(100% - 4rem);
+  width: 100%;
   height: 2rem;
   padding: 0.25rem;
   text-align: center;
   line-height: 1.2rem;
-  font-size: 1rem;
+  font-size: 0.825rem;
+  font-weight: 700;
 `;
 
 const ItemQuantityInput = ({
@@ -50,7 +47,7 @@ const ItemQuantityInput = ({
   return (
     <ItemQuantityInputBlock>
       <QuantityMinusButton type="button" onClick={onDecreaseButtonClick}>
-        <VscRemove />
+        <VscRemove size="1rem" />
       </QuantityMinusButton>
       <StyledInput
         type="text"
@@ -59,7 +56,7 @@ const ItemQuantityInput = ({
         onChange={onChange}
       />
       <QuantityPlusButton type="button" onClick={onIncreaseButtonClick}>
-        <VscAdd />
+        <VscAdd size="1rem" />
       </QuantityPlusButton>
     </ItemQuantityInputBlock>
   );

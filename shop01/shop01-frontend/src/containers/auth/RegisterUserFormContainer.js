@@ -1,63 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import RegisterUserForm from '../../components/auth/RegisterUserForm';
-import { initializeForm, changeField, register } from '../../modules/auth';
+import { initializeForm, register } from '../../modules/auth';
 import { check } from '../../modules/user';
 
 const RegisterUserFormContainer = ({ history }) => {
   const dispatch = useDispatch();
-  const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
-    form: auth.register,
+  const { auth, authError, user } = useSelector(({ auth, user }) => ({
     auth: auth.auth,
-    authError: auth.authError,
+    authError: auth.error,
     user: user.user,
   }));
 
   const [error, setError] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleSubmit = useCallback(
+    (data) => {
+      delete data.confirmPassword;
 
-    dispatch(
-      changeField({
-        form: 'register',
-        key: name,
-        value,
-      }),
-    );
-  };
+      console.log('폼 제출!!');
+      console.log(data);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { email, password, passwordConfirm, nick, phone } = form;
-
-    if ([email, password, passwordConfirm, nick, phone].includes('')) {
-      setError('빈 칸을 모두 입력하세요.');
-      return;
-    }
-
-    if (password !== passwordConfirm) {
-      setError('비밀번호가 일치하지 않습니다.');
-      dispatch(changeField({ form: 'register', key: 'password', value: '' }));
-      dispatch(
-        changeField({ form: 'register', key: 'passwordConfirm', value: '' }),
-      );
-      return;
-    }
-
-    dispatch(register({ email, password, nick, phone }));
-  };
+      dispatch(register(data));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
-    dispatch(initializeForm('register'));
+    return () => dispatch(initializeForm());
   }, [dispatch]);
 
   useEffect(() => {
     if (authError) {
       if (authError.response.status === 409) {
-        setError('이미 존재하는 계정명입니다.');
+        setError('이미 가입된 이메일입니다.');
         return;
       }
 
@@ -77,14 +54,7 @@ const RegisterUserFormContainer = ({ history }) => {
     }
   }, [history, user]);
 
-  return (
-    <RegisterUserForm
-      form={form}
-      error={error}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-    />
-  );
+  return <RegisterUserForm error={error} onSubmit={handleSubmit} />;
 };
 
 export default withRouter(RegisterUserFormContainer);

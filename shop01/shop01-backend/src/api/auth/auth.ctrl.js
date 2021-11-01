@@ -1,5 +1,7 @@
 const Joi = require('joi');
 const User = require('../../models/user');
+const Role = require('../../models/role');
+const ShippingAddress = require('../../models/shippingAddress');
 
 exports.register = async (req, res, next) => {
   const schema = Joi.object().keys({
@@ -12,15 +14,27 @@ exports.register = async (req, res, next) => {
       .pattern(/^[0-9]*$/)
       .max(11)
       .required(),
+    postCode: Joi.string().max(5).required(),
+    address1: Joi.string().max(100).required(),
+    address2: Joi.string().optional().allow('').max(100),
   });
   const result = schema.validate(req.body);
 
   if (result.error) {
+    console.log(result.error);
     res.status(400).end(); // Bad Request
     return;
   }
 
-  const { email, password, nick, phone } = req.body;
+  const {
+    email,
+    password,
+    nick,
+    phone,
+    postCode: post_code,
+    address1,
+    address2,
+  } = req.body;
 
   try {
     const exists = await User.findByEmail(email);
@@ -34,9 +48,18 @@ exports.register = async (req, res, next) => {
       email,
       nick,
       phone,
+      RoleId: 1,
     });
     await user.setPassword(password);
     await user.save();
+
+    await ShippingAddress.create({
+      post_code,
+      address1,
+      address2,
+      is_default: true,
+      user_id: user.id,
+    });
 
     const token = user.generateToken();
     const data = user.serialize();
@@ -99,7 +122,22 @@ exports.check = async (req, res) => {
     return;
   }
 
-  res.json(user);
+  try {
+    const data = await User.findOne({
+      where: { id: user.id },
+      attributes: { exclude: ['password', 'RoleId'] },
+      include: [
+        {
+          model: Role,
+        },
+      ],
+    });
+
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 };
 
 exports.logout = async (req, res) => {

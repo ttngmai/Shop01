@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
-import ProductDetail from '../../components/product/ProductDetail';
 import { initializeProduct, readProduct } from '../../modules/product';
+import ProductDetail from '../../components/product/ProductDetail';
 
 const ProductDetailContainer = ({ match }) => {
   const dispatch = useDispatch();
@@ -16,11 +16,6 @@ const ProductDetailContainer = ({ match }) => {
   );
 
   const { productId } = match.params;
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-
-  const handleMouseOver = (index) => {
-    setActiveImageIndex(index);
-  };
 
   useEffect(() => {
     dispatch(readProduct(productId));
@@ -35,9 +30,7 @@ const ProductDetailContainer = ({ match }) => {
       product={product}
       totalAmount={totalAmount}
       loading={loading}
-      activeImageIndex={activeImageIndex}
       error={error}
-      onMouseOver={handleMouseOver}
     />
   );
 };

@@ -1,7 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useCallback } from 'react';
+import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscAdd } from 'react-icons/vsc';
+import { IoMdClose } from 'react-icons/io';
+import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 
 const UploadBoxBlock = styled.ul`
@@ -13,6 +15,8 @@ const UploadBoxBlock = styled.ul`
 `;
 
 const Item = styled.li`
+  display: flex;
+  flex-direction: column;
   position: relative;
   width: 25%;
   height: 0;
@@ -44,34 +48,130 @@ const InputLabel = styled.label`
   }
 `;
 
-const UploadBox = ({ images, onChange, onChangeFile }) => {
+const DeleteImageButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid ${palette.gray[3]};
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+
+  &:hover svg {
+    color: ${palette.red[7]};
+  }
+`;
+
+const UploadBox = () => {
+  const { control, setValue, watch, trigger } = useFormContext();
+  const { fields, move, update } = useFieldArray({
+    control,
+    name: 'images',
+  });
+
+  const watchImages = watch('images');
+  console.log(watchImages);
+
+  const handleDragEnd = useCallback(
+    ({ source, destination }) => {
+      if (destination) {
+        move(source.index, destination.index);
+      }
+    },
+    [move],
+  );
+
+  const getBase64 = useCallback(
+    (file, callback) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        callback(reader.result);
+        trigger('images');
+      };
+      reader.onerror = (err) => {
+        console.log(err);
+      };
+    },
+    [trigger],
+  );
+
+  const handleChange = useCallback(
+    (name, e) => {
+      const file = e.currentTarget.files[0];
+      getBase64(file, (result) => {
+        setValue(name, { file: file, base64: result });
+      });
+    },
+    [getBase64, setValue],
+  );
+
+  const handleDeleteImageButtonClick = useCallback(
+    (index, e) => {
+      e.stopPropagation();
+      update(index, { image: null });
+    },
+    [update],
+  );
+
   return (
-    <DragDropContext onDragEnd={onChange}>
+    <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="images" direction="horizontal">
         {(provided) => (
           <UploadBoxBlock ref={provided.innerRef} {...provided.droppableProps}>
-            {images &&
-              images.map(({ id, imageBase64 }, index) => (
-                <Draggable key={id} draggableId={id} index={index}>
-                  {(provided, snapshot) => (
-                    <Item
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      isDragging={snapshot.isDragging}
-                    >
-                      <InputLabel>
-                        {imageBase64 ? (
-                          <img src={imageBase64} alt="uploaded" />
-                        ) : (
-                          <VscAdd size="2rem" color={palette.gray[6]} />
+            {fields.map((item, index) => (
+              <Draggable
+                key={item.id}
+                draggableId={`image-${item.id}`}
+                index={index}
+              >
+                {(provided, snapshot) => (
+                  <Item
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    isDragging={snapshot.isDragging}
+                  >
+                    <InputLabel>
+                      {watchImages[index].image ? (
+                        <img
+                          src={watchImages[index].image.base64}
+                          alt="uploaded"
+                        />
+                      ) : (
+                        <VscAdd size="2rem" color={palette.gray[6]} />
+                      )}
+                      <Controller
+                        control={control}
+                        name={`images.${index}.image`}
+                        render={({ field: { ref } }) => (
+                          <input
+                            type="file"
+                            onChange={(e) => {
+                              handleChange(`images.${index}.image`, e);
+                            }}
+                            ref={ref}
+                          />
                         )}
-                        <input type="file" name={id} onChange={onChangeFile} />
-                      </InputLabel>
-                    </Item>
-                  )}
-                </Draggable>
-              ))}
+                      />
+                    </InputLabel>
+                    {watchImages[index].image && (
+                      <DeleteImageButton
+                        type="button"
+                        onClick={(e) => handleDeleteImageButtonClick(index, e)}
+                      >
+                        <IoMdClose size="1rem" />
+                      </DeleteImageButton>
+                    )}
+                  </Item>
+                )}
+              </Draggable>
+            ))}
             {provided.placeholder}
           </UploadBoxBlock>
         )}

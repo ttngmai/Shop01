@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useMeasure from 'react-use-measure';
+import { useSpring, animated } from 'react-spring';
 import styled from 'styled-components';
+import palette from '../../lib/styles/palette';
+import WhiteBox from '../common/WhiteBox';
+import ManageCategoryButtonsContainer from '../../containers/categories/ManageCategoryButtonsContainer';
+import CreateCategoryButtonContainer from '../../containers/categories/CreateCategoryButtonContainer';
 import { CgChevronRight, CgFolder } from 'react-icons/cg';
 import { VscDash } from 'react-icons/vsc';
-import palette from '../../lib/styles/palette';
-import CategoryEditButtonsContainer, {
-  CreateButtonContainer,
-} from '../../containers/categories/CategoryEditButtonsContainer';
 
-const CreateButtonBlock = styled.div`
+const CreateCategoryButtonBox = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
@@ -69,22 +71,34 @@ const AccordionItemHeading = styled.div`
   }
 `;
 
-const AccordionItemContent = styled.div`
+const AccordionItemContent = styled(animated.div)`
   background-color: #f0f5f9;
   overflow: hidden;
-
-  &[aria-expanded='true'] {
-    max-height: 0px;
-    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
-  }
 `;
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => (ref.current = value), [value]);
+  return ref.current;
+}
+
 const AccordionItem = React.memo(({ category, children }) => {
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
-    setIsAccordionOpen(!isAccordionOpen);
+    setIsOpen(!isOpen);
   };
+
+  const previous = usePrevious(isOpen);
+  const [ref, { height: viewHeight }] = useMeasure();
+  const { height, opacity, y } = useSpring({
+    from: { height: 0, opacity: 0, y: 0 },
+    to: {
+      height: isOpen ? viewHeight : 0,
+      opacity: isOpen ? 1 : 0,
+      y: isOpen ? 0 : -20,
+    },
+  });
 
   return (
     <AccordionItemBlock>
@@ -96,17 +110,23 @@ const AccordionItem = React.memo(({ category, children }) => {
           <CgChevronRight
             className="cgChevronRight"
             size="1rem"
-            aria-expanded={isAccordionOpen}
+            aria-expanded={isOpen}
           />
         ) : (
           <VscDash size="1rem" />
         )}
         <CgFolder size="1rem" />
         <span>{category.name}</span>
-        <CategoryEditButtonsContainer category={category} />
+        <ManageCategoryButtonsContainer category={category} />
       </AccordionItemHeading>
-      <AccordionItemContent aria-expanded={!isAccordionOpen}>
-        {children}
+      <AccordionItemContent
+        aria-expanded={!isOpen}
+        style={{
+          opacity,
+          height: isOpen && previous === isOpen ? 'auto' : height,
+        }}
+      >
+        <animated.div ref={ref} style={{ y }} children={children} />
       </AccordionItemContent>
     </AccordionItemBlock>
   );
@@ -128,10 +148,12 @@ const Accordion = React.memo(({ categories }) => {
 const ManageCategoryBox = ({ categories }) => {
   return (
     <ManageCategoryBoxBlock>
-      <CreateButtonBlock>
-        <CreateButtonContainer />
-      </CreateButtonBlock>
-      <Accordion categories={categories} />
+      <WhiteBox>
+        <CreateCategoryButtonBox>
+          <CreateCategoryButtonContainer />
+        </CreateCategoryButtonBox>
+        <Accordion categories={categories} />
+      </WhiteBox>
     </ManageCategoryBoxBlock>
   );
 };
