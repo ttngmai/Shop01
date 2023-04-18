@@ -15,7 +15,7 @@ const Background = styled.div`
   background: rgba(0, 0, 0, 0.25);
 `;
 
-const ConfirmModalBlock = styled.div`
+const ModalBlock = styled.div`
   width: 425px;
   padding: 1.5rem;
   border-radius: 4px;
@@ -48,7 +48,6 @@ const StyledButton = styled(Button)`
 `;
 
 const ConfirmModal = ({
-  visible,
   heading,
   description,
   confirmText = '확인',
@@ -57,15 +56,13 @@ const ConfirmModal = ({
   onConfirm,
   children,
 }) => {
-  if (!visible) return null;
-
   const handlePreventBubbling = (e) => {
     e.stopPropagation();
   };
 
   return (
     <Background onClick={onCancel}>
-      <ConfirmModalBlock onClick={handlePreventBubbling}>
+      <ModalBlock onClick={handlePreventBubbling}>
         <Heading>{heading}</Heading>
         <ContentBox>
           <p>{description}</p>
@@ -79,7 +76,7 @@ const ConfirmModal = ({
             {confirmText}
           </StyledButton>
         </ButtonsBox>
-      </ConfirmModalBlock>
+      </ModalBlock>
     </Background>
   );
 };

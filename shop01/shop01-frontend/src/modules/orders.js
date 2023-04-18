@@ -8,7 +8,7 @@ import * as ordersAPI from '../lib/api/orders';
 const [LIST_ORDERS, LIST_ORDERS_SUCCESS, LIST_ORDERS_FAILURE] =
   createRequestActionTypes('orders/LIST_ORDERS');
 
-export const listOrders = createAction(LIST_ORDERS);
+export const listOrders = createAction(LIST_ORDERS, ({ page }) => ({ page }));
 
 const listOrdersSaga = createRequestSaga(LIST_ORDERS, ordersAPI.listOrders);
 

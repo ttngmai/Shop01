@@ -2,7 +2,7 @@ import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
 import ResponsiveBoxTemplate from '../components/common/ResponsiveBoxTemplate';
-import OrderListContainer from '../containers/orders/OrderListContainer';
+import OrderListContainer from '../containers/user/orders/OrderListContainer';
 
 const OrderListPage = () => {
   return (

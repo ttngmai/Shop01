@@ -79,6 +79,7 @@ module.exports = class User extends Sequelize.Model {
     const token = jwt.sign(
       {
         id: this.id,
+        role_id: this.RoleId,
       },
       process.env.JWT_SECRET,
       {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
 import cn from 'classnames';
+import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { CgChevronRight } from 'react-icons/cg';
 
 const MenuBlock = styled.div`
+  justify-self: flex-start;
   align-self: stretch;
   display: flex;
   position: relative;
@@ -19,7 +20,7 @@ const MenuHeading = styled.div`
   cursor: pointer;
 
   & > svg {
-    margin-top: 2.5px;
+    margin-top: 4px;
     margin-right: 0.5rem;
   }
 `;
@@ -180,7 +181,7 @@ const ProductCategoryMenu = ({ categories }) => {
   return (
     <MenuBlock onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <MenuHeading>
-        <AiOutlineMenu size="1.2rem" />
+        <AiOutlineMenu size="1.25rem" />
         카테고리
       </MenuHeading>
       <MenuContent aria-expanded={!isDropdownOpen}>

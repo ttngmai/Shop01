@@ -12,7 +12,28 @@ export const listProducts = ({ category, name, page }) => {
     name,
     page,
   });
+
   return client.get(`/api/products?${queryString}`);
 };
 
+export const listProductsForAdmin = ({ category, name, page }) => {
+  const queryString = qs.stringify({
+    category,
+    name,
+    page,
+  });
+
+  return client.get(`/api/admin/products?${queryString}`);
+};
+
 export const readProduct = (id) => client.get(`/api/products/${id}`);
+
+export const updateProduct = ({ id, category, name, price }) =>
+  client.patch(`/api/admin/products/${id}`, {
+    category,
+    name,
+    price,
+  });
+
+export const updateDisplay = ({ id, display }) =>
+  client.patch(`/api/admin/products/${id}/display`, { display });

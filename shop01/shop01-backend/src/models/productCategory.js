@@ -41,4 +41,30 @@ module.exports = class ProductCategory extends Sequelize.Model {
       sourceKey: 'id',
     });
   }
+
+  static async getSubCategoryIds(id) {
+    let result = [id];
+    let categoryIds = await ProductCategory.findAll({
+      where: {
+        parent_id: id,
+      },
+      attributes: ['id'],
+      raw: true,
+    });
+
+    if (categoryIds.length > 0) {
+      const promises = [];
+
+      categoryIds.forEach((item) => {
+        promises.push(ProductCategory.getSubCategoryIds(item.id));
+      });
+
+      let subCategoryIds = await Promise.all(promises);
+      subCategoryIds.forEach((id) => {
+        result = [...result, ...id];
+      });
+    }
+
+    return result;
+  }
 };

@@ -2,8 +2,8 @@ import React from 'react';
 import Background from '../components/common/Background';
 import HeaderContainer from '../containers/common/HeaderContainer';
 import ResponsiveBoxTemplate from '../components/common/ResponsiveBoxTemplate';
-import UserProfileContainer from '../containers/user/UserProfileContainer';
-import UserShippingAddresses from '../components/user/UserShippingAddresses';
+import UserProfileContainer from '../containers/user/user/UserProfileContainer';
+import UserShippingAddresses from '../components/user/user/UserShippingAddresses';
 
 const MyPage = () => {
   return (

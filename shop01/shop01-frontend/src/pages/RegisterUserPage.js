@@ -1,7 +1,7 @@
 import React from 'react';
 import Background from '../components/common/Background';
-import AuthTemplate from '../components/auth/AuthTemplate';
-import RegisterUserFormContainer from '../containers/auth/RegisterUserFormContainer';
+import AuthTemplate from '../components/user/auth/AuthTemplate';
+import RegisterUserFormContainer from '../containers/user/auth/RegisterUserFormContainer';
 
 const RegisterUserPage = () => {
   return (

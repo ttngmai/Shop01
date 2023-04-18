@@ -1,13 +1,13 @@
 import React from 'react';
 import Background from '../components/common/Background';
-import HeaderContainer from '../containers/common/HeaderContainer';
+import AdminHeaderContainer from '../containers/common/AdminHeaderContainer';
 import ResponsiveBoxTemplate from '../components/common/ResponsiveBoxTemplate';
-import ManageCategoryBoxContainer from '../containers/categories/ManageCategoryBoxContainer';
+import ManageCategoryBoxContainer from '../containers/admin/categories/ManageCategoryBoxContainer';
 
 const ManageCategoriesPage = () => {
   return (
     <Background>
-      <HeaderContainer />
+      <AdminHeaderContainer />
       <ResponsiveBoxTemplate heading="카테고리 관리">
         <ManageCategoryBoxContainer />
       </ResponsiveBoxTemplate>

@@ -62,17 +62,6 @@ const initialState = {
     product: null,
     totalAmount: 0,
   },
-  register: {
-    category: null,
-    name: '',
-    price: '',
-    images: [
-      { id: '1', imageBase64: '', imageFile: null },
-      { id: '2', imageBase64: '', imageFile: null },
-      { id: '3', imageBase64: '', imageFile: null },
-      { id: '4', imageBase64: '', imageFile: null },
-    ],
-  },
   error: null,
 };
 

@@ -1,8 +1,8 @@
+import React from 'react';
 import DaumPostcode from 'react-daum-postcode';
-import { VscClose } from 'react-icons/vsc';
 import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
-import Responsive from '../common/Responsive';
+import { VscClose } from 'react-icons/vsc';
 
 const Background = styled.div`
   display: flex;
@@ -17,8 +17,9 @@ const Background = styled.div`
   background: rgba(0, 0, 0, 0.25);
 `;
 
-const SearchShippingAddressModalBlock = styled(Responsive)`
+const ModalBlock = styled.div`
   position: relative;
+  width: 425px;
   padding: 0;
 
   button {
@@ -47,13 +48,13 @@ const SearchShippingAddressModalBlock = styled(Responsive)`
 const SearchShippingAddressModal = ({ onCancel, onComplete }) => {
   return (
     <Background>
-      <SearchShippingAddressModalBlock>
+      <ModalBlock>
         <button type="button" onClick={onCancel}>
           <VscClose size="1.5rem" />
           닫기
         </button>
         <DaumPostcode onComplete={onComplete} />
-      </SearchShippingAddressModalBlock>
+      </ModalBlock>
     </Background>
   );
 };

@@ -12,6 +12,11 @@ module.exports = class Product extends Sequelize.Model {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
         },
+        display: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+        },
         created_at: {
           type: Sequelize.DATE,
           allowNull: false,

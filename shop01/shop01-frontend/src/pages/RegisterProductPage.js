@@ -1,13 +1,13 @@
 import React from 'react';
 import Background from '../components/common/Background';
-import HeaderContainer from '../containers/common/HeaderContainer';
+import AdminHeaderContainer from '../containers/common/AdminHeaderContainer';
 import ResponsiveBoxTemplate from '../components/common/ResponsiveBoxTemplate';
-import RegisterProductFormContainer from '../containers/product/RegisterProductFormContainer';
+import RegisterProductFormContainer from '../containers/admin/product/RegisterProductFormContainer';
 
 const RegisterProductPage = () => {
   return (
     <Background>
-      <HeaderContainer />
+      <AdminHeaderContainer />
       <ResponsiveBoxTemplate heading="상품 등록">
         <RegisterProductFormContainer />
       </ResponsiveBoxTemplate>

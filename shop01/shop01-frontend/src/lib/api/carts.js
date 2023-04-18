@@ -1,5 +1,10 @@
 import client from './client';
 
+export const addToCart = (product) => {
+  console.log(product);
+  return client.post('/api/carts', { product });
+};
+
 export const readCart = () => {
   return client.get('/api/carts');
 };

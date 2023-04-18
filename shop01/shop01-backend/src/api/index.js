@@ -1,20 +1,11 @@
 const express = require('express');
-const auth = require('./auth');
-const shippingAddresses = require('./shippingAddresses');
-const products = require('./products');
-const categories = require('./categories');
-const carts = require('./carts');
-const orders = require('./orders');
-const reviews = require('./reviews');
+const admin = require('./admin');
+const user = require('./user');
+const checkAdmin = require('../lib/middlewares/checkAdmin');
 
 const router = express.Router();
 
-router.use('/auth', auth);
-router.use('/shipping-addresses', shippingAddresses);
-router.use('/products', products);
-router.use('/categories', categories);
-router.use('/carts', carts);
-router.use('/orders', orders);
-router.use('/reviews', reviews);
+router.use('/', user);
+router.use('/admin', checkAdmin, admin);
 
 module.exports = router;

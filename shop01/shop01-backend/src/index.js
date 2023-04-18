@@ -14,8 +14,8 @@ const app = express();
 app.set('port', process.env.PORT || 4000);
 
 const api = require('./api');
-const createData = require('./createData'); // 더미 데이터 생성
-const jwtMiddleware = require('./lib/jwtMiddleware');
+const createData = require('./createData');
+const jwtMiddleware = require('./lib/middlewares/jwtMiddleware');
 
 try {
   fs.readdirSync('uploads');

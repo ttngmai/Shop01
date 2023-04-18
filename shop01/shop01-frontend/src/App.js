@@ -13,6 +13,7 @@ import OrderPage from './pages/OrderPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import AdminMainPage from './pages/AdminMainPage';
 import OrderListPage from './pages/OrderListPage';
 import ManageUsersPage from './pages/ManageUsersPage';
 import ManageCategoriesPage from './pages/ManageCategoriesPage';
@@ -36,11 +37,12 @@ const App = () => {
       <Route component={OrderPage} path={'/user/order'} exact />
       <Route component={OrderSuccessPage} path={'/user/order/success'} />
       <Route component={OrderListPage} path={'/user/order-list'} />
-      <Route component={ProductListPage} path={'/product-list'} />
+      <Route component={ProductListPage} path={'/product-list'} exact />
       <Route
         component={ProductDetailPage}
         path={'/product-detail/:productId'}
       />
+      <RouteIf user={user} component={AdminMainPage} path={'/admin'} />
       <RouteIf user={user} component={ManageUsersPage} path={'/user/manage'} />
       <RouteIf
         user={user}
@@ -55,7 +57,7 @@ const App = () => {
       <RouteIf
         user={user}
         component={ManageProductListPage}
-        path={'/product/manage'}
+        path={'/product-list/manage'}
       />
       <RouteIf
         user={user}

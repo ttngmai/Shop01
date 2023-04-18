@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { BiChevronDown } from 'react-icons/bi';
+import palette from '../../lib/styles/palette';
 import Responsive from './Responsive';
 import Button from './Button';
-import palette from '../../lib/styles/palette';
 import ProductCategoryMenuContainer from '../../containers/common/ProductCategoryMenuContainer';
+import { BiChevronDown } from 'react-icons/bi';
 
 const HeaderBlock = styled.div`
   position: fixed;
@@ -16,12 +16,13 @@ const HeaderBlock = styled.div`
 `;
 
 const Wrapper = styled(Responsive)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   height: 3.5rem;
 
   .logo-area {
+    justify-self: center;
+    align-self: center;
     font-size: 1.125rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -31,6 +32,14 @@ const Wrapper = styled(Responsive)`
   .logo-area:hover {
     color: ${palette.indigo[7]};
   }
+`;
+
+const MenuItemsBox = styled.div`
+  justify-self: flex-end;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const Spacer = styled.div`
@@ -85,10 +94,12 @@ const UserMenuContent = styled.nav`
 
 const StyledButton = styled(Button)`
   padding: 0.25rem 0.5rem;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
   text-align: left;
 `;
 
-const UserMenu = ({ nick, onLogout }) => {
+const UserMenu = ({ user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleMouseEnter = () => {
@@ -105,14 +116,19 @@ const UserMenu = ({ nick, onLogout }) => {
       onMouseLeave={handleMouseLeave}
     >
       <UserMenuHeading>
-        {nick}
+        {user.nick}
         <span className="sir">님</span>
         <BiChevronDown />
       </UserMenuHeading>
       <UserMenuContent aria-expanded={!isDropdownOpen}>
         <ul>
+          {user.Role.name === 'ADMIN' && (
+            <li>
+              <Link to="/admin">관리자 메인</Link>
+            </li>
+          )}
           <li>
-            <Link to="/user/mypage">마이페이지</Link>
+            <Link to="/user/mypage">마이 페이지</Link>
           </li>
           <li>
             <Link to="/user/cart">장바구니</Link>
@@ -140,11 +156,13 @@ const Header = ({ user, onLogout }) => {
           <Link to="/" className="logo-area">
             SHOP01
           </Link>
-          {user ? (
-            <UserMenu nick={user.nick} onLogout={onLogout} />
-          ) : (
-            <Link to="/user/login">로그인</Link>
-          )}
+          <MenuItemsBox>
+            {user ? (
+              <UserMenu user={user} onLogout={onLogout} />
+            ) : (
+              <Link to="/user/login">로그인</Link>
+            )}
+          </MenuItemsBox>
         </Wrapper>
       </HeaderBlock>
       <Spacer />
